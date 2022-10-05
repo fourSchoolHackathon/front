@@ -47,7 +47,7 @@ export const InputWrapper = styled.div`
 
 export const Label = styled.div`
   max-width: 20rem;
-  width: 100%;
+  width: 90%;
   padding: 0 0.5rem;
   box-sizing: border-box;
   margin-bottom: 0.5rem;
@@ -55,7 +55,7 @@ export const Label = styled.div`
 
 export const Input = styled.input`
   max-width: 20rem;
-  width: 100%;
+  width: 90%;
   height: 2.5rem;
   outline: none;
   box-sizing: border-box;
@@ -72,9 +72,9 @@ export const Input = styled.input`
 export const LoginBtn = styled.button`
   font-size: 1.5rem;
   border: none;
-  background: #6eace4;
+  background: #ff8450;
   color: #fff;
-  padding: 0.5rem 5rem;
+  padding: 0.5rem 20%;
   border-radius: 0.5rem;
   font-weight: bold;
   cursor: pointer;

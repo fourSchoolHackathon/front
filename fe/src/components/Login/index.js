@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import api from '../../common/api'
 import * as S from './style'
 
 const Main = () => {
+  const [loading, setLoading] = useState(false)
   const {
     register,
     handleSubmit,
@@ -11,11 +12,16 @@ const Main = () => {
   } = useForm()
 
   const onSubmit = async form => {
+    if (loading) return
     try {
+      setLoading(true)
       const { data } = await api.post('/user/signin', form)
+      setLoading(false)
+
       localStorage.setItem('access_token', data.access_token)
     } catch (e) {
       alert('로그인에 실패했습니다')
+      setLoading(false)
     }
   }
 
@@ -68,8 +74,6 @@ const Main = () => {
             )}
           </S.InputWrapper>
         </S.LoginWrapper>
-
-        <S.Label>{}</S.Label>
 
         <S.LoginBtn>로그인</S.LoginBtn>
       </S.Content>
