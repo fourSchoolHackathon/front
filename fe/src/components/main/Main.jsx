@@ -38,6 +38,13 @@ const Main = () => {
     }
   }
 
+  function simpleReques(){
+    
+  }
+  function categoryRequest(){
+
+  }
+
   //   useEffect(() => {
   //     console.log(location)
   //   }, [location])
@@ -51,7 +58,6 @@ const Main = () => {
 
   useEffect(() => {
     console.log(time)
-    console.log(time.split("T")[1])
   },[time])
 
   const service = [
@@ -80,7 +86,14 @@ const Main = () => {
       setSelected(prev => [...prev, service])
     }
   }
-  function dateHandler(e) {}
+  /** index는 T를 기준으로 나누었을 때의 배열index이다 */
+  function timeHandler(index,value) {
+    // setTime((prev) => prev.split("T")[index])
+
+    const temp = time.split("T")
+    temp[index] = value
+    setTime(temp.join(''))
+  }
 
   return (
     <M.Wrapper>
@@ -146,6 +159,7 @@ const Main = () => {
                   <input
                     type="date"
                     defaultValue={time.split("T")[0]}
+                    onChange={(e) => timeHandler(0,e.target.value)}
                     />
                 </M.SplitInput>
                 <M.SplitInput>
@@ -153,6 +167,7 @@ const Main = () => {
                   <input
                     type="date"
                     defaultValue={time.split("T")[0]}
+                    onChange={(e) => timeHandler(2,e.target.value)}
                     />
                 </M.SplitInput>
               </M.InputsWrapper>
@@ -162,14 +177,14 @@ const Main = () => {
                 <input 
                 type="time" 
                 defaultValue={time.split("T")[1]} 
-                onChange={(e) => console.log(e.target.value)} />
+                onChange={(e) => timeHandler(1,e.target.value)} />
                 </M.SplitInput>
                 <M.SplitInput>
                 <h4>종료 시간</h4>
                 <input 
                 type="time" 
                 defaultValue={time.split("T")[3]} 
-                onChange={(e) => console.log(e.target.value)} />
+                onChange={(e) => timeHandler(3,e.target.value)} />
                 </M.SplitInput>
               </M.InputsWrapper>
           </M.DateWrapper>
@@ -177,7 +192,7 @@ const Main = () => {
         
 
         <M.CategoryButtonWrapper>
-        <button onClick={getLocation}>요청하기</button>
+            <button onClick={categoryRequest}>요청하기</button>
         </M.CategoryButtonWrapper>
 
       </M.CategoryReqWrapper>
