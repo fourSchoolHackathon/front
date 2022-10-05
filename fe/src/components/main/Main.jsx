@@ -45,7 +45,7 @@ const Main = () => {
   }
   function categoryRequest() {
     if (gender !== '' && selected !== []) {
-      console.log('카테고리 도움 요청')
+      console.log('카테고리 도움 요청',gender,selected,time)
       getLocation()
     } else {
       alert('카테고리를 완성해주세요')
