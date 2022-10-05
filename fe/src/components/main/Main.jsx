@@ -38,11 +38,18 @@ const Main = () => {
     }
   }
 
-  function simpleReques(){
-    
+  // 일단 웹 플로우 상으론 이게 맞음, 바로 requested로 들어오면 답없음
+  function simpleReques() {
+    console.log('간단한 도움 요청')
+    getLocation()
   }
-  function categoryRequest(){
-
+  function categoryRequest() {
+    if (gender !== '' && selected !== []) {
+      console.log('카테고리 도움 요청')
+      getLocation()
+    } else {
+      alert('카테고리를 완성해주세요')
+    }
   }
 
   //   useEffect(() => {
@@ -51,14 +58,30 @@ const Main = () => {
 
   // -------
 
-  const now = new Date();
+  const now = new Date()
   const [gender, setGender] = useState('')
   const [selected, setSelected] = useState([])
-  const [time, setTime] = useState(`${now.getFullYear()}-${`${now.getMonth()}`.padStart(2,"0")}-${`${now.getDate()}`.padStart(2,"0")}T${`${now.getHours()}`.padStart(2,"0")}:${`${now.getMinutes()}`.padStart(2,"0")}T${now.getFullYear()}-${`${now.getMonth()}`.padStart(2,"0")}-${`${now.getDate()}`.padStart(2,"0")}T${`${now.getHours()+2}`.padStart(2,"0")}:${`${now.getMinutes()}`.padStart(2,"0")}`)
+  const [time, setTime] = useState(
+    `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
+      2,
+      '0'
+    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(
+      2,
+      '0'
+    )}:${`${now.getMinutes()}`.padStart(
+      2,
+      '0'
+    )}T${now.getFullYear()}-${`${now.getMonth()}`.padStart(
+      2,
+      '0'
+    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${
+      now.getHours() + 2
+    }`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(2, '0')}`
+  )
 
   useEffect(() => {
     console.log(time)
-  },[time])
+  }, [time])
 
   const service = [
     '이동보조',
@@ -87,10 +110,10 @@ const Main = () => {
     }
   }
   /** index는 T를 기준으로 나누었을 때의 배열index이다 */
-  function timeHandler(index,value) {
+  function timeHandler(index, value) {
     // setTime((prev) => prev.split("T")[index])
 
-    const temp = time.split("T")
+    const temp = time.split('T')
     temp[index] = value
     setTime(temp.join(''))
   }
@@ -107,7 +130,7 @@ const Main = () => {
           <p>현재 위치를 기반으로 빠르게 도움을 요청하세요</p>
         </M.SimpleComments>
         <M.ButtonWrapper>
-          <button onClick={getLocation}>요청하기</button>
+          <button onClick={simpleReques}>요청하기</button>
         </M.ButtonWrapper>
       </M.SimpleReqWrapper>
 
@@ -153,48 +176,48 @@ const Main = () => {
 
           <h3>시간</h3>
           <M.DateWrapper>
-              <M.InputsWrapper>
-                <M.SplitInput>
-                  <h4>시작일</h4>
-                  <input
-                    type="date"
-                    defaultValue={time.split("T")[0]}
-                    onChange={(e) => timeHandler(0,e.target.value)}
-                    />
-                </M.SplitInput>
-                <M.SplitInput>
-                  <h4>종료일</h4>
-                  <input
-                    type="date"
-                    defaultValue={time.split("T")[0]}
-                    onChange={(e) => timeHandler(2,e.target.value)}
-                    />
-                </M.SplitInput>
-              </M.InputsWrapper>
-              <M.InputsWrapper>
-                <M.SplitInput>
+            <M.InputsWrapper>
+              <M.SplitInput>
+                <h4>시작일</h4>
+                <input
+                  type="date"
+                  defaultValue={time.split('T')[0]}
+                  onChange={e => timeHandler(0, e.target.value)}
+                />
+              </M.SplitInput>
+              <M.SplitInput>
+                <h4>종료일</h4>
+                <input
+                  type="date"
+                  defaultValue={time.split('T')[0]}
+                  onChange={e => timeHandler(2, e.target.value)}
+                />
+              </M.SplitInput>
+            </M.InputsWrapper>
+            <M.InputsWrapper>
+              <M.SplitInput>
                 <h4>시작 시간</h4>
-                <input 
-                type="time" 
-                defaultValue={time.split("T")[1]} 
-                onChange={(e) => timeHandler(1,e.target.value)} />
-                </M.SplitInput>
-                <M.SplitInput>
+                <input
+                  type="time"
+                  defaultValue={time.split('T')[1]}
+                  onChange={e => timeHandler(1, e.target.value)}
+                />
+              </M.SplitInput>
+              <M.SplitInput>
                 <h4>종료 시간</h4>
-                <input 
-                type="time" 
-                defaultValue={time.split("T")[3]} 
-                onChange={(e) => timeHandler(3,e.target.value)} />
-                </M.SplitInput>
-              </M.InputsWrapper>
+                <input
+                  type="time"
+                  defaultValue={time.split('T')[3]}
+                  onChange={e => timeHandler(3, e.target.value)}
+                />
+              </M.SplitInput>
+            </M.InputsWrapper>
           </M.DateWrapper>
         </M.CategoryWrapper>
-        
 
         <M.CategoryButtonWrapper>
-            <button onClick={categoryRequest}>요청하기</button>
+          <button onClick={categoryRequest}>요청하기</button>
         </M.CategoryButtonWrapper>
-
       </M.CategoryReqWrapper>
 
       <M.Temp />
