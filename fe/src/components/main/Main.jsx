@@ -162,8 +162,8 @@ const Main = () => {
                 <input type="time" defaultValue={time.split("T")[1]} onChange={(e) => console.log(e.target.value)} />
                 </M.SplitInput>
                 <M.SplitInput>
-                <h4>시작 시간</h4>
-                <input type="time" defaultValue={time.split("T")[1]} onChange={(e) => console.log(e.target.value)} />
+                <h4>종료 시간</h4>
+                <input type="time" defaultValue={`${`${now.getHours()+2}`.padStart(2,"0")}:${`${now.getMinutes()}`.padStart(2,"0")}`} onChange={(e) => console.log(e.target.value)} />
                 </M.SplitInput>
               </M.InputsWrapper>
           </M.DateWrapper>

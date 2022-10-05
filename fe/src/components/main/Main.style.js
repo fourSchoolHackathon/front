@@ -111,7 +111,8 @@ const Input = styled.input`
   display: none;
   + label {
     cursor: pointer;
-    height: 100%;
+    /* height: 100%; */
+    height: 40px;
     width: 30%;
     font-size: 20px;
     box-sizing: border-box;
@@ -150,13 +151,6 @@ export const Category = styled.div`
   border-radius: 15px;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.1);
   margin: 7px;
-  /* ${props =>
-    props.isExist
-      ? css`
-          background-color: #ff8450;
-          color: white;
-        `
-      : null} */
   color: ${props => (props.isExist ? 'white' : 'black')};
   background-color: ${props => (props.isExist ? '#ff8450' : 'white')};
 `
@@ -183,18 +177,24 @@ export const SplitInput = styled.div`
     margin: 8px 0px;
   }
   > input {
-    margin-bottom: 15px;
+    width: 120px;
+    height: 30px;
+    border-radius: 10px;
+    padding: 8px;
+    border:1px #b6b3b3 solid;
+    /* font-size:15px; */
+    /* border:none; */
   }
 `
 
 export const CategoryButtonWrapper = styled.div`
-    width:100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    margin:20px 0px 40px 0px;
-    > button {
-    background-color:#ff8450;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0px 40px 0px;
+  > button {
+    background-color: #ff8450;
     color: white;
     width: 200px;
     height: 80px;
@@ -203,9 +203,10 @@ export const CategoryButtonWrapper = styled.div`
     border-radius: 15px;
     font-size: 20px;
     font-weight: bold;
+
+    margin: 50px 0px 30px 0px;
   }
 `
-
 
 export const Temp = styled.div`
   width: 100%;
