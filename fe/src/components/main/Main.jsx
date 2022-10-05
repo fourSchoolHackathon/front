@@ -3,7 +3,7 @@ import React from 'react';
 const Main = () => {
     return (
         <div>
-            
+            메인임
         </div>
     );
 };
