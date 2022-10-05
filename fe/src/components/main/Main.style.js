@@ -150,34 +150,60 @@ export const Category = styled.div`
   border-radius: 15px;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.1);
   margin: 7px;
-  /* ${(props) => props.isExist ? css`
-    background-color:#ff8450;
-    color:white;
-  `:null} */
-  color:${(props) => props.isExist ? "white" : "black"};
-  background-color:${(props) => props.isExist ? "#ff8450" : "white"};
+  /* ${props =>
+    props.isExist
+      ? css`
+          background-color: #ff8450;
+          color: white;
+        `
+      : null} */
+  color: ${props => (props.isExist ? 'white' : 'black')};
+  background-color: ${props => (props.isExist ? '#ff8450' : 'white')};
 `
 
 export const DateWrapper = styled.div`
   width: 100%;
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
 `
 export const DateInputWrapper = styled.div`
-    width:100%;
+  width: 100%;
 `
 
-export const InputsWrapper  = styled.div`
-    margin:10px 20px 30px 20px;
-    display:flex;
-    justify-content:space-evenly;
+export const InputsWrapper = styled.div`
+  margin: 10px 50px 10px 50px;
+  display: flex;
+  justify-content: space-between;
+  /* justify-content: space-evenly; */
 `
 export const SplitInput = styled.div`
-    display:Flex;
-    flex-direction:column;
-    >input{
-        margin-bottom:15px;
-    }
+  display: Flex;
+  flex-direction: column;
+  > h4 {
+    margin: 8px 0px;
+  }
+  > input {
+    margin-bottom: 15px;
+  }
+`
+
+export const CategoryButtonWrapper = styled.div`
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:20px 0px 40px 0px;
+    > button {
+    background-color:#ff8450;
+    color: white;
+    width: 200px;
+    height: 80px;
+    outline: none;
+    border: none;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: bold;
+  }
 `
 
 

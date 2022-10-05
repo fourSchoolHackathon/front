@@ -44,10 +44,15 @@ const Main = () => {
 
   // -------
 
+  const now = new Date();
   const [gender, setGender] = useState('')
   const [selected, setSelected] = useState([])
-  const [time, setTime] = useState(new Date().toISOString().slice(0, -6))
-  //   const [time,setTime] = useState(new Date().toISOString().slice(0,-14))
+  const [time, setTime] = useState(`${now.getFullYear()}-${`${now.getMonth()}`.padStart(2,"0")}-${`${now.getDate()}`.padStart(2,"0")}T${`${now.getHours()}`.padStart(2,"0")}:${`${now.getMinutes()}`.padStart(2,"0")}`)
+
+  useEffect(() => {
+    console.log(time)
+    console.log(time.split("T")[1])
+  },[time])
 
   const service = [
     '이동보조',
@@ -76,10 +81,6 @@ const Main = () => {
     }
   }
   function dateHandler(e) {}
-
-  useEffect(() => {
-    console.log(selected)
-  }, [selected])
 
   return (
     <M.Wrapper>
@@ -139,30 +140,42 @@ const Main = () => {
 
           <h3>시간</h3>
           <M.DateWrapper>
-            <M.DateInputWrapper>
               <M.InputsWrapper>
                 <M.SplitInput>
+                  <h4>시작일</h4>
                   <input
                     type="date"
-                    defaultValue={new Date().toISOString().slice(0, -14)}
-                  />
+                    defaultValue={time.split("T")[0]}
+                    />
                 </M.SplitInput>
                 <M.SplitInput>
-                  <input type="time" />
+                  <h4>종료일</h4>
+                  <input
+                    type="date"
+                    defaultValue={time.split("T")[0]}
+                    />
                 </M.SplitInput>
               </M.InputsWrapper>
-
-              {/* <input type="date" defaultValue={new Date().toISOString().slice(0,-14)} onChange={(e) => dateHandler(e,)} /> */}
-
-              {/* <input
-                type="date"
-                defaultValue={time}
-                onChange={e => dateHandler(e)}
-              /> */}
-            </M.DateInputWrapper>
+              <M.InputsWrapper>
+                <M.SplitInput>
+                <h4>시작 시간</h4>
+                <input type="time" defaultValue={time.split("T")[1]} onChange={(e) => console.log(e.target.value)} />
+                </M.SplitInput>
+                <M.SplitInput>
+                <h4>시작 시간</h4>
+                <input type="time" defaultValue={time.split("T")[1]} onChange={(e) => console.log(e.target.value)} />
+                </M.SplitInput>
+              </M.InputsWrapper>
           </M.DateWrapper>
         </M.CategoryWrapper>
+        
+
+        <M.CategoryButtonWrapper>
+        <button onClick={getLocation}>요청하기</button>
+        </M.CategoryButtonWrapper>
+
       </M.CategoryReqWrapper>
+
       <M.Temp />
     </M.Wrapper>
   )
