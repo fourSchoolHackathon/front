@@ -1,17 +1,22 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
+import api from '../../common/api'
 import * as S from './style'
 
 const Main = () => {
-  const [error, setError] = useState()
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm()
 
-  const onSubmit = form => {
-    console.log(form)
+  const onSubmit = async form => {
+    try {
+      const { data } = await api.post('/user/signin', form)
+      localStorage.setItem('access_token', data.access_token)
+    } catch (e) {
+      alert('로그인에 실패했습니다')
+    }
   }
 
   return (
