@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import api from '../../common/api'
 import * as S from './style'
 
-const Main = () => {
+const Siginin = () => {
   const [loading, setLoading] = useState(false)
   const {
     register,
@@ -81,4 +81,4 @@ const Main = () => {
   )
 }
 
-export default Main
+export default Siginin
