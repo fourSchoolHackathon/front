@@ -10,7 +10,7 @@ export const Wrapper = styled.div`
   height: 100vh;
 `
 
-export const Content = styled.div`
+export const Content = styled.form`
   max-width: 30rem;
   width: 90%;
   max-height: 30rem;
