@@ -164,8 +164,22 @@ export const DateWrapper = styled.div`
   flex-direction:column;
 `
 export const DateInputWrapper = styled.div`
-    margin:10px 0px 20px 20px;
+    width:100%;
 `
+
+export const InputsWrapper  = styled.div`
+    margin:10px 20px 30px 20px;
+    display:flex;
+    justify-content:space-evenly;
+`
+export const SplitInput = styled.div`
+    display:Flex;
+    flex-direction:column;
+    >input{
+        margin-bottom:15px;
+    }
+`
+
 
 export const Temp = styled.div`
   width: 100%;

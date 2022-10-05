@@ -38,15 +38,14 @@ const Main = () => {
     }
   }
 
-//   useEffect(() => {
-//     console.log(location)
-//   }, [location])
+  //   useEffect(() => {
+  //     console.log(location)
+  //   }, [location])
 
   // -------
 
   const [gender, setGender] = useState('')
   const [selected, setSelected] = useState([])
-  const [duration, setDuration] = useState('단기')
   const [time, setTime] = useState(new Date().toISOString().slice(0, -6))
   //   const [time,setTime] = useState(new Date().toISOString().slice(0,-14))
 
@@ -64,22 +63,23 @@ const Main = () => {
   ]
 
   /**인자값으로 들어온 서비스가 이미 선택된 것이라면 true */
-  function findService(service){
-    return selected.includes(service);
+  function findService(service) {
+    return selected.includes(service)
   }
-  function handleService(service){
+  function handleService(service) {
     // 이미 있었다면 취소
-    if (findService(service)){
-        setSelected((prev) => prev.filter((e) => e !== service))
-    } else { // 없으니 추가
-        setSelected((prev) => [...prev,service])
+    if (findService(service)) {
+      setSelected(prev => prev.filter(e => e !== service))
+    } else {
+      // 없으니 추가
+      setSelected(prev => [...prev, service])
     }
   }
   function dateHandler(e) {}
 
   useEffect(() => {
     console.log(selected)
-  },[selected])
+  }, [selected])
 
   return (
     <M.Wrapper>
@@ -127,42 +127,30 @@ const Main = () => {
           <h3>서비스</h3>
           <M.Categorys>
             {service.map(i => (
-              <M.Category 
-              onClick={() => handleService(i)}
-              isExist={findService(i)}
-              key={i}
-              >{i}</M.Category>
+              <M.Category
+                onClick={() => handleService(i)}
+                isExist={findService(i)}
+                key={i}
+              >
+                {i}
+              </M.Category>
             ))}
           </M.Categorys>
 
           <h3>시간</h3>
           <M.DateWrapper>
-            <M.InputWrapper>
-              <M.LeftInput
-                type="radio"
-                id="select3"
-                name="duration"
-                onClick={() => setDuration('단기')}
-                defaultChecked
-              />
-              <label htmlFor="select3">단기</label>
-              <M.RightInput
-                type="radio"
-                id="select4"
-                name="duration"
-                onClick={() => setDuration('장기')}
-              />
-              <label htmlFor="select4">장기</label>
-            </M.InputWrapper>
-
             <M.DateInputWrapper>
-              {
-                duration === "단기" ?
-                <input type="date" defaultValue={new Date().toISOString().slice(0,-14)} />
-                :
-                <></>
-
-              }
+              <M.InputsWrapper>
+                <M.SplitInput>
+                  <input
+                    type="date"
+                    defaultValue={new Date().toISOString().slice(0, -14)}
+                  />
+                </M.SplitInput>
+                <M.SplitInput>
+                  <input type="time" />
+                </M.SplitInput>
+              </M.InputsWrapper>
 
               {/* <input type="date" defaultValue={new Date().toISOString().slice(0,-14)} onChange={(e) => dateHandler(e,)} /> */}
 
