@@ -7,6 +7,6 @@ export default [
   { path: '', element: <Main />, nav: true, footer: false },
   { path: '*', element: <NotFound />, nav: false, footer: false },
   { path: 'profile', element: <div>profile</div>, nav: true, footer: false },
-  { path: 'login', element: <Login />, nav: false, footer: false }
+  { path: 'signin', element: <Login />, nav: false, footer: false }
   // { path: "hi", element: <div>hi</div>, nav: false, footer: false },
 ]
