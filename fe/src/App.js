@@ -16,12 +16,10 @@ function App() {
   })
 
   useLayoutEffect((element) => {
-    console.log(location.pathname.split('/'))
     let temp = routes.find(element => element.path === location.pathname.split('/')[1])
     if(temp === undefined) {
         temp = routes.find(element => element.path === "*")
     }
-    console.log(temp)
     setRenderInfo({nav:temp.nav,footer:temp.footer})
   },[location.pathname])
 
