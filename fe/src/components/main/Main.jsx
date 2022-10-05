@@ -47,7 +47,7 @@ const Main = () => {
   const now = new Date();
   const [gender, setGender] = useState('')
   const [selected, setSelected] = useState([])
-  const [time, setTime] = useState(`${now.getFullYear()}-${`${now.getMonth()}`.padStart(2,"0")}-${`${now.getDate()}`.padStart(2,"0")}T${`${now.getHours()}`.padStart(2,"0")}:${`${now.getMinutes()}`.padStart(2,"0")}`)
+  const [time, setTime] = useState(`${now.getFullYear()}-${`${now.getMonth()}`.padStart(2,"0")}-${`${now.getDate()}`.padStart(2,"0")}T${`${now.getHours()}`.padStart(2,"0")}:${`${now.getMinutes()}`.padStart(2,"0")}T${now.getFullYear()}-${`${now.getMonth()}`.padStart(2,"0")}-${`${now.getDate()}`.padStart(2,"0")}T${`${now.getHours()+2}`.padStart(2,"0")}:${`${now.getMinutes()}`.padStart(2,"0")}`)
 
   useEffect(() => {
     console.log(time)
@@ -159,11 +159,17 @@ const Main = () => {
               <M.InputsWrapper>
                 <M.SplitInput>
                 <h4>시작 시간</h4>
-                <input type="time" defaultValue={time.split("T")[1]} onChange={(e) => console.log(e.target.value)} />
+                <input 
+                type="time" 
+                defaultValue={time.split("T")[1]} 
+                onChange={(e) => console.log(e.target.value)} />
                 </M.SplitInput>
                 <M.SplitInput>
                 <h4>종료 시간</h4>
-                <input type="time" defaultValue={`${`${now.getHours()+2}`.padStart(2,"0")}:${`${now.getMinutes()}`.padStart(2,"0")}`} onChange={(e) => console.log(e.target.value)} />
+                <input 
+                type="time" 
+                defaultValue={time.split("T")[3]} 
+                onChange={(e) => console.log(e.target.value)} />
                 </M.SplitInput>
               </M.InputsWrapper>
           </M.DateWrapper>
