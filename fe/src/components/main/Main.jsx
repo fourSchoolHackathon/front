@@ -95,7 +95,7 @@ const Main = () => {
   const [selected, setSelected] = useState([])
 
   const [startTime, setStartTime] = useState(
-    `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
+    `${now.getFullYear()}-${`${now.getMonth()+1}`.padStart(
       2,
       '0'
     )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(
@@ -105,7 +105,7 @@ const Main = () => {
   )
 
   const [endTime, setEndTime] = useState(
-    `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
+    `${now.getFullYear()}-${`${now.getMonth()+1}`.padStart(
       2,
       '0'
     )}-${`${now.getDate()}`.padStart(2, '0')}T${`${
