@@ -2,7 +2,7 @@ import * as S from './style'
 import * as Style from '../Signin/style'
 import { useForm } from 'react-hook-form'
 import api from '../../common/api'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PostcodePopup from './PostcodePopup'
 
 const categories = [
@@ -18,6 +18,23 @@ const categories = [
 ]
 
 const Signup = () => {
+  // 위도경도가 저장
+  const [exactLocation,setExactLocation] = useState({lat:0,lng:0})
+
+  const { kakao } = window
+  const geocoder = new kakao.maps.services.Geocoder()
+
+  function searchAdd(string){
+    geocoder.addressSearch(string,(result,status) => {
+      if(status === kakao.maps.services.Status.OK){
+        // console.log(result)
+        // temp = [result[0].y,result[0].x]
+        setExactLocation({lat:result[0].y,lng:result[0].x})
+           
+      }
+    })
+  }
+
   const {
     register,
     getValues,
@@ -28,6 +45,13 @@ const Signup = () => {
   const [loading, setLoading] = useState(false)
   const [modal, setModal] = useState(false)
   const [address, setAddress] = useState('')
+
+  useEffect(() => {
+    if (address.length > 0){
+      searchAdd(address)
+    }
+  },[address])
+
 
   const onSubmit = async form => {
     if (!address) {
@@ -46,6 +70,10 @@ const Signup = () => {
 
     try {
       setLoading(true)
+
+      console.log(address)
+      console.log(exactLocation)
+
       const { data } = await api.post('/user/signup', form)
       setLoading(false)
 
