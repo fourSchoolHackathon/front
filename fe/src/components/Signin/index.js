@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom'
 import api from '../../common/api'
 import * as S from './style'
 
 const Siginin = () => {
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const {
     register,
@@ -25,10 +27,14 @@ const Siginin = () => {
     }
   }
 
+  useEffect(() => {
+    if (localStorage.getItem('access_token')) navigate('/')
+  }, [])
+
   return (
     <S.Wrapper>
       <S.Content onSubmit={handleSubmit(onSubmit)}>
-        <S.Title>케어닥</S.Title>
+        <S.Title>돌봄</S.Title>
         <S.LoginWrapper>
           <S.InputWrapper>
             <S.Label>아이디</S.Label>
@@ -75,7 +81,10 @@ const Siginin = () => {
           </S.InputWrapper>
         </S.LoginWrapper>
 
-        <S.LoginBtn>로그인</S.LoginBtn>
+        <S.ButtonWrapper>
+          <S.LoginBtn>로그인</S.LoginBtn>
+          <Link to="/signup">회원가입</Link>
+        </S.ButtonWrapper>
       </S.Content>
     </S.Wrapper>
   )

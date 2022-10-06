@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import api from '../../common/api'
 import { useEffect, useState } from 'react'
 import PostcodePopup from './PostcodePopup'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const categories = [
   '이동보조',
@@ -55,6 +55,10 @@ const Signup = () => {
       searchAdd(address)
     }
   }, [address])
+
+  useEffect(() => {
+    if (localStorage.getItem('access_token')) navigate('/')
+  }, [])
 
   const onSubmit = async form => {
     if (!address) {
@@ -222,7 +226,10 @@ const Signup = () => {
           />
         )}
 
-        <Style.LoginBtn>회원가입</Style.LoginBtn>
+        <S.ButtonWrapper>
+          <Style.LoginBtn>회원가입</Style.LoginBtn>
+          <Link to="/signin">로그인</Link>
+        </S.ButtonWrapper>
       </S.Content>
     </S.Wrapper>
   )

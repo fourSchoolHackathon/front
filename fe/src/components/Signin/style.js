@@ -69,6 +69,22 @@ export const Input = styled.input`
   }
 `
 
+export const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  a {
+    color: #000;
+    text-decoration: none;
+    margin-top: 0.5rem;
+
+    :hover {
+      text-decoration: underline;
+    }
+  }
+`
+
 export const LoginBtn = styled.button`
   font-size: 1.2rem;
   border: none;
@@ -78,4 +94,5 @@ export const LoginBtn = styled.button`
   border-radius: 0.5rem;
   font-weight: bold;
   cursor: pointer;
+  white-space: nowrap;
 `

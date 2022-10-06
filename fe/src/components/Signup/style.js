@@ -91,6 +91,22 @@ export const FakeInput = styled.div`
   word-break: break-all;
 `
 
+export const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  a {
+    color: #000;
+    text-decoration: none;
+    margin-top: 0.5rem;
+
+    :hover {
+      text-decoration: underline;
+    }
+  }
+`
+
 export const Button = styled.button`
   font-size: 1rem;
   border: none;
