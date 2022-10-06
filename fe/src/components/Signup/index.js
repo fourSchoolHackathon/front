@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import api from '../../common/api'
 import { useEffect, useState } from 'react'
 import PostcodePopup from './PostcodePopup'
+import { useNavigate } from 'react-router-dom'
 
 const categories = [
   '이동보조',
@@ -29,7 +30,10 @@ const Signup = () => {
       if (status === kakao.maps.services.Status.OK) {
         // console.log(result)
         // temp = [result[0].y,result[0].x]
-        setExactLocation({ latitude: result[0].y, longitude: result[0].x })
+        setExactLocation({
+          latitude: (+result[0].y).toFixed(8),
+          longitude: (+result[0].x).toFixed(8)
+        })
       }
     })
   }
@@ -41,6 +45,7 @@ const Signup = () => {
     setError,
     formState: { errors }
   } = useForm()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [modal, setModal] = useState(false)
   const [address, setAddress] = useState('')
@@ -64,16 +69,9 @@ const Signup = () => {
       return
     }
     if (loading) return
-    console.log(form)
 
     try {
       setLoading(true)
-
-      console.log({
-        ...form,
-        ...exactLocation,
-        address: undefined
-      })
 
       const { data } = await api.post('/user/signup', {
         ...form,
@@ -83,6 +81,8 @@ const Signup = () => {
       setLoading(false)
 
       localStorage.setItem('access_token', data.access_token)
+
+      navigate('/')
     } catch (e) {
       alert('회원가입에 실패했습니다')
       setLoading(false)
