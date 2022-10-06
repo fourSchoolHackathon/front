@@ -7,40 +7,42 @@ import { storedLocation, storedIsLogin } from '../../stores/location/location'
 
 import currentLoc from '../../static/requested/currentLoc.svg'
 
-import loading from "../../static/requested/loading.svg"
+import loading from '../../static/requested/loading.svg'
 
 const Loading = () => {
-    return (
-        <R.LoadingWrapper>
-            <R.LoadBar>
-            <h3>매칭중입니다</h3>
-            {/* <img src={loading} /> */}
-            <img src={loading} alt="로딩중" />
-            </R.LoadBar>
-            <p>곧 돌보미로부터 전화가 옴니다</p>
-        </R.LoadingWrapper>
-    )
+  return (
+    <R.LoadingWrapper>
+      <R.LoadBar>
+        <h3>매칭중입니다</h3>
+        {/* <img src={loading} /> */}
+        <img src={loading} alt="로딩중" />
+      </R.LoadBar>
+      <p>곧 돌보미로부터 전화가 옴니다</p>
+    </R.LoadingWrapper>
+  )
 }
 
 const RequestHelp = () => {
-  
-  const [location, setLocation] = useRecoilState(storedLocation)
-  const [isLogin, setIsLogin] = useRecoilState(storedIsLogin)
+
+    const [location, setLocation] = useRecoilState(storedLocation)
+    const [isLogin, setIsLogin] = useRecoilState(storedIsLogin)
+
+
 
   // 로그인이 안 되 었을 때 사용할 state
   const [userNumber, setUserNumber] = useState('')
-  const [certNumber,setCertNumber] = useState('')
+  const [certNumber, setCertNumber] = useState('')
 
   useEffect(() => {
     const userNum = localStorage.getItem('userNumber')
-    if (userNum){
-        setIsLogin(true)
-        setUserNumber(userNumber)
+    if (userNum) {
+      setIsLogin(true)
+      setUserNumber(userNumber)
     } else {
     }
     setUserNumber(userNum === null ? '' : userNum)
   }, [])
-  
+
   // 전화번호 커스텀
   useEffect(() => {
     if (String(userNumber).length === 10) {
@@ -53,18 +55,16 @@ const RequestHelp = () => {
           .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
       )
     }
-    
   }, [userNumber])
-
 
   function loginInputHandler(value) {
     setUserNumber(value)
   }
 
-  function makeLogin(){
-    setIsLogin(true) 
-    setUserNumber(localStorage.setItem('userNumber',userNumber))
-    console.log("소켓 연결")
+  function makeLogin() {
+    setIsLogin(true)
+    setUserNumber(localStorage.setItem('userNumber', userNumber))
+    console.log('소켓 연결')
   }
 
   return (
@@ -103,20 +103,19 @@ const RequestHelp = () => {
       </Map>
       {isLogin ? (
         <R.MoreInfo>
-            <Loading/>
+          <Loading />
         </R.MoreInfo>
       ) : (
         <R.MiniModal>
           <R.LoginWrapper>
-
             <R.GetPhoneWrapper>
-            <R.LoginInput
-              placeholder='전화번호'
-              type="text"
-              value={userNumber}
-              onChange={e => loginInputHandler(e.target.value)}
-            ></R.LoginInput>
-            <R.LoginButon onClick={makeLogin}>인증</R.LoginButon>
+              <R.LoginInput
+                placeholder="전화번호"
+                type="text"
+                value={userNumber}
+                onChange={e => loginInputHandler(e.target.value)}
+              ></R.LoginInput>
+              <R.LoginButon onClick={makeLogin}>인증</R.LoginButon>
             </R.GetPhoneWrapper>
             {/* <R.GetPhoneWrapper>
             <R.LoginInput

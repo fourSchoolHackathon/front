@@ -13,7 +13,6 @@ const Main = () => {
   const navigate = useNavigate()
 
   function getLocation() {
-    let returnLocation;
     if (navigator.geolocation) {
       // GPS를 지원하면
       navigator.geolocation.getCurrentPosition(
@@ -36,11 +35,11 @@ const Main = () => {
           timeout: Infinity
         }
       )
-      // return returnLocation
     } else {
       alert('GPS를 지원하지 않습니다')
     }
   }
+
 
   function getUserNumber(){
     return localStorage.getItem('userNumber')
