@@ -5,8 +5,15 @@ import { useNavigate } from 'react-router-dom'
 
 import { useRecoilState } from 'recoil'
 import { storedLocation,storedIsLogin } from '../../stores/location/location'
+import { storedReqKind,storedCategoryInfo } from '../../stores/requestInfo/requestInfo'
 
 const Main = () => {
+
+  //카테고리인지 아닌지
+  const [reqKind,setReqKind] = useRecoilState(storedReqKind);
+  // 카테고리
+  const [categoryInfo,setCategoryInfo] = useRecoilState(storedCategoryInfo)
+  
   const [location, setLocation] = useRecoilState(storedLocation)
   const [isLogin,setIsLogin]  = useRecoilState(storedIsLogin)
 
@@ -54,11 +61,10 @@ const Main = () => {
   }
 
   function simpleReques() {
-    
     toggleIsLogin();
     getLocation()
     console.log('간단한 도움 요청')
-    console.log('소켓 연결')
+    setReqKind('simple')
     navigate('/req')
   }
   function categoryRequest() {
@@ -66,7 +72,13 @@ const Main = () => {
       toggleIsLogin()
       getLocation()
       console.log('카테고리 도움 요청', gender, selected, startTime,endTime)
-      console.log("소켓 연결")
+      setReqKind('category')
+      setCategoryInfo({
+        category_list:selected,
+        start_at:startTime,
+        end_at:endTime,
+        sex:gender,
+      })
       navigate('/req')
     } else {
       alert('카테고리를 완성해주세요')
@@ -93,7 +105,7 @@ const Main = () => {
     `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
       2,
       '0'
-    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()+2}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(
+    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()+2 > 23 ? now.getHours()+2-24 : now.getHours()+2}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(
       2,
       '0'
     )}`
@@ -146,6 +158,7 @@ const Main = () => {
     }
 
   }
+
 
 
   return (

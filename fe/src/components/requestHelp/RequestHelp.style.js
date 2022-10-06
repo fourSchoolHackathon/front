@@ -12,7 +12,7 @@ export const MoreInfo = styled.div`
   right: 20px;
   bottom: 50px;
   width: 70%;
-  padding: 20px 20px 30px 20px;
+  padding:20px;
   z-index: 1;
   background-color: white;
   border-radius: 20px 20px 0px 20px;
@@ -63,7 +63,7 @@ export const LoginInput = styled.input`
     font-weight: bold;
   }
 `
-export const LoginButon = styled.button`
+export const LoginButton = styled.button`
   width: 80px;
   border-radius: 10px;
   border: 1px solid;
@@ -112,4 +112,44 @@ export const LoadBar = styled.div`
     margin-left: 15px;
     animation:${myAni} 1s infinite;
   }
+`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const AlertWrapper = styled.div`
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    > h3{
+        margin:0px;
+    }
+    >p{
+        margin:0px;
+        margin-top:7px;
+        font-size:13px;
+    }
 `
