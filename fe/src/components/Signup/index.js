@@ -22,6 +22,7 @@ const Signup = () => {
     register,
     getValues,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm()
   const [loading, setLoading] = useState(false)
@@ -29,7 +30,20 @@ const Signup = () => {
   const [address, setAddress] = useState('')
 
   const onSubmit = async form => {
+    if (!address) {
+      setError('address', { type: 'required', message: '주소는 필수값입니다' })
+      return
+    }
+    if (form.categories.length !== 2) {
+      setError('categories', {
+        type: 'required',
+        message: '2개를 필수로 선택해주세요'
+      })
+      return
+    }
     if (loading) return
+    console.log(form)
+
     try {
       setLoading(true)
       const { data } = await api.post('/user/signup', form)
@@ -126,7 +140,7 @@ const Signup = () => {
               <Style.Input
                 value={address}
                 readOnly
-                {...register('address', { required: '주소는 필수 값입니다' })}
+                {...register('address')}
                 aria-invalid={errors.address ? 'true' : 'false'}
               />
               <S.Button onClick={() => setModal(true)} type="button">
@@ -140,7 +154,7 @@ const Signup = () => {
             )}
           </Style.InputWrapper>
 
-          <Style.InputWrapper>
+          <Style.InputWrapper style={{ marginBottom: '2rem' }}>
             <Style.Label>도움을 줄 수 있는 분야</Style.Label>
             <S.CheckBoxWrapper>
               {categories.map((category, i) => (
@@ -160,6 +174,11 @@ const Signup = () => {
                 </S.CheckBoxBorder>
               ))}
             </S.CheckBoxWrapper>
+            {errors.categories && (
+              <Style.Label style={{ color: 'red' }} role="alert">
+                {errors.categories?.message}
+              </Style.Label>
+            )}
           </Style.InputWrapper>
         </Style.LoginWrapper>
 
