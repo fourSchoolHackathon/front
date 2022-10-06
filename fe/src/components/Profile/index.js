@@ -2,15 +2,18 @@ import { useCallback, useEffect, useState } from 'react'
 import userCircle from '../../static/profile/user-circle.svg'
 import * as S from './style'
 import api from '../../common/api'
+import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
   const [data, setData] = useState(null)
+  const navigate = useNavigate()
 
   const calcDate = useCallback(
     date => `${date.getFullYear()} / ${date.getMonth() + 1} / ${date.getDate()}`
   )
 
   useEffect(() => {
+    if (!localStorage.getItem('access_token')) navigate('/signin')
     ;(async () => {
       const { data } = await api.get('/user/history')
       setData(data)
@@ -26,8 +29,8 @@ const Profile = () => {
       <S.ActiveWrapper>
         <h3>활동 내역</h3>
         <S.Actives>
-          {data?.application_list.map(i => (
-            <S.Active>
+          {data?.application_list.map((i, idx) => (
+            <S.Active key={idx}>
               <div>
                 <S.ActiveDate>{calcDate(new Date(i.called_at))}</S.ActiveDate>
                 <S.Badges>
