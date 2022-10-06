@@ -10,5 +10,4 @@ const storedIsLogin = atom({
     default:false
 })
 
-
 export {storedLocation,storedIsLogin}

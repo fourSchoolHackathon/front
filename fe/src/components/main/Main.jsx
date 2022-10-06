@@ -47,10 +47,10 @@ const Main = () => {
   }
 
   function toggleIsLogin(){
-    if (getUserNumber){ // 연결이 이미 되어 있다면 getLocation
-      setIsLogin(true)
-    } else { // userNumber가 없다면
+    if (getUserNumber() === null){ // 연결이 이미 되어 있다면 getLocation
       setIsLogin(false)
+    } else { // userNumber가 없다면
+      setIsLogin(true)
     }
   }
 
