@@ -21,6 +21,8 @@ const Siginin = () => {
       setLoading(false)
 
       localStorage.setItem('access_token', data.access_token)
+
+      navigate('/')
     } catch (e) {
       alert('로그인에 실패했습니다')
       setLoading(false)
@@ -34,7 +36,7 @@ const Siginin = () => {
   return (
     <S.Wrapper>
       <S.Content onSubmit={handleSubmit(onSubmit)}>
-        <S.Title>돌봄</S.Title>
+        <S.Title>할미</S.Title>
         <S.LoginWrapper>
           <S.InputWrapper>
             <S.Label>아이디</S.Label>
