@@ -9,6 +9,8 @@ import currentLoc from '../../static/requested/currentLoc.svg'
 
 import loading from '../../static/requested/loading.svg'
 
+import socketio from "socket.io-client"
+
 const Loading = () => {
   return (
     <R.LoadingWrapper>
@@ -23,25 +25,33 @@ const Loading = () => {
 }
 
 const RequestHelp = () => {
+    // 소켓 연결
+  const socket = socketio.connect("https://2022hackathon.bssm.kro.kr/match")
 
     const [location, setLocation] = useRecoilState(storedLocation)
     const [isLogin, setIsLogin] = useRecoilState(storedIsLogin)
-
-
 
   // 로그인이 안 되 었을 때 사용할 state
   const [userNumber, setUserNumber] = useState('')
   const [certNumber, setCertNumber] = useState('')
 
+  function connectSocket(){
+    console.log("소켓 연결",userNumber)
+    socket.emit('match',{phoneNumber:userNumber})
+    socket.on('match',(msg) => {
+        console.log(msg)
+    })
+  }
+
   useEffect(() => {
     const userNum = localStorage.getItem('userNumber')
+    setUserNumber(userNum === null ? '' : userNum)
     if (userNum) {
       setIsLogin(true)
-      setUserNumber(userNumber)
-    } else {
-    }
-    setUserNumber(userNum === null ? '' : userNum)
+      connectSocket()
+    } 
   }, [])
+  
 
   // 전화번호 커스텀
   useEffect(() => {
@@ -64,8 +74,11 @@ const RequestHelp = () => {
   function makeLogin() {
     setIsLogin(true)
     setUserNumber(localStorage.setItem('userNumber', userNumber))
-    console.log('소켓 연결')
+    connectSocket()
   }
+
+  
+
 
   return (
     <R.Wrapper>
@@ -117,15 +130,6 @@ const RequestHelp = () => {
               ></R.LoginInput>
               <R.LoginButon onClick={makeLogin}>인증</R.LoginButon>
             </R.GetPhoneWrapper>
-            {/* <R.GetPhoneWrapper>
-            <R.LoginInput
-              placeholder='인증번호'
-              type="text"
-              value={certNumber}
-              onChange={e => setCertNumber(e.target.value)}
-            ></R.LoginInput>
-            <R.LoginButon>인증</R.LoginButon>
-            </R.GetPhoneWrapper> */}
           </R.LoginWrapper>
         </R.MiniModal>
       )}
