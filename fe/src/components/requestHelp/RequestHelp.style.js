@@ -12,7 +12,7 @@ export const MoreInfo = styled.div`
   right: 20px;
   bottom: 50px;
   width: 70%;
-  padding: 20px;
+  padding: 20px 20px 30px 20px;
   z-index: 1;
   background-color: white;
   border-radius: 20px 20px 0px 20px;
@@ -89,7 +89,19 @@ const myAni = keyframes`
 export const LoadingWrapper = styled.div`
   width: 100%;
   height: 40px;
-  display: flex;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  align-items:center;
+  >p{
+    margin:0px;
+    font-size:13px;
+  }
+`
+
+export const LoadBar = styled.div`
+    width:100%;
+    display: flex;
   justify-content: Center;
   align-items: center;
   >h3{
@@ -100,5 +112,4 @@ export const LoadingWrapper = styled.div`
     margin-left: 15px;
     animation:${myAni} 1s infinite;
   }
-
 `

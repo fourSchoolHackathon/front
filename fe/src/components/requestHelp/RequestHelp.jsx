@@ -12,9 +12,12 @@ import loading from "../../static/requested/loading.svg"
 const Loading = () => {
     return (
         <R.LoadingWrapper>
+            <R.LoadBar>
             <h3>매칭중입니다</h3>
             {/* <img src={loading} /> */}
             <img src={loading} alt="로딩중" />
+            </R.LoadBar>
+            <p>곧 전화가 돌보미로부터 전화가 옴니다</p>
         </R.LoadingWrapper>
     )
 }
@@ -61,6 +64,7 @@ const RequestHelp = () => {
   function makeLogin(){
     setIsLogin(true) 
     setUserNumber(localStorage.setItem('userNumber',userNumber))
+    console.log("소켓 연결")
   }
 
   return (
