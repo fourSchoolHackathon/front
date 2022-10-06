@@ -4,31 +4,26 @@ import { useLocation } from 'react-router-dom'
 import api from '../../common/api'
 import * as S from './style'
 
-interface Info {
-  category: string[];
-  phoneNumber: string;
-}
-
 const Main = () => {
   const location = useLocation()
   const phoneNumber = QueryString.parse(location.search, {
     ignoreQueryPrefix: true
   }).phoneNumber
-  const [info, setInfo] = useState < Info > null
+  const [info, setInfo] = useState(null);
 
   useEffect(() => {
-    ;(async () => {
-      if (typeof phoneNumber !== 'string') return
+    (async () => {
+      if (typeof phoneNumber !== 'string' || phoneNumber.length !== 11) return;
       // 더미 데이터
       setInfo({
         category: ['이동보조', '말벗', '주변정리', '식사보조'],
         phoneNumber: '01012345678'
-      })
+      });
 
       // 서버에서 정보 가져오는 코드
       // setInfo(await (await api.get<Info>(`info?phone_number=${phoneNumber}`)).data);
     })()
-  }, [phoneNumber])
+  }, [phoneNumber]);
 
   return (
     info && (
@@ -42,7 +37,7 @@ const Main = () => {
             <p>전화를 걸어 도와주세요</p>
           </S.CallComments>
           <S.CallBtnWrap>
-            <a href={`tel:${info.phoneNumber}`}>
+            <a href={`tel://${info.phoneNumber}`}>
               <button>전화 걸기</button>
             </a>
           </S.CallBtnWrap>
@@ -65,4 +60,4 @@ const Main = () => {
   )
 }
 
-export default Main
+export default Main;
