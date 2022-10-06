@@ -17,7 +17,7 @@ const Loading = () => {
             {/* <img src={loading} /> */}
             <img src={loading} alt="로딩중" />
             </R.LoadBar>
-            <p>곧 전화가 돌보미로부터 전화가 옴니다</p>
+            <p>곧 돌보미로부터 전화가 옴니다</p>
         </R.LoadingWrapper>
     )
 }
