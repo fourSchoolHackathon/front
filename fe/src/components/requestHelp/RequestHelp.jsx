@@ -7,6 +7,18 @@ import { storedLocation, storedIsLogin } from '../../stores/location/location'
 
 import currentLoc from '../../static/requested/currentLoc.svg'
 
+import loading from "../../static/requested/loading.svg"
+
+const Loading = () => {
+    return (
+        <R.LoadingWrapper>
+            <h3>매칭중입니다</h3>
+            {/* <img src={loading} /> */}
+            <img src={loading} alt="로딩중" />
+        </R.LoadingWrapper>
+    )
+}
+
 const RequestHelp = () => {
   
   const [location, setLocation] = useRecoilState(storedLocation)
@@ -14,10 +26,16 @@ const RequestHelp = () => {
 
   // 로그인이 안 되 었을 때 사용할 state
   const [userNumber, setUserNumber] = useState('')
+  const [certNumber,setCertNumber] = useState('')
 
   useEffect(() => {
     const userNum = localStorage.getItem('userNumber')
-    setUserNumber(userNum ? userNum : '')
+    if (userNum){
+        setIsLogin(true)
+        setUserNumber(userNumber)
+    } else {
+    }
+    setUserNumber(userNum === null ? '' : userNum)
   }, [])
   
   // 전화번호 커스텀
@@ -38,6 +56,11 @@ const RequestHelp = () => {
 
   function loginInputHandler(value) {
     setUserNumber(value)
+  }
+
+  function makeLogin(){
+    setIsLogin(true) 
+    setUserNumber(localStorage.setItem('userNumber',userNumber))
   }
 
   return (
@@ -75,7 +98,9 @@ const RequestHelp = () => {
         <ZoomControl />
       </Map>
       {isLogin ? (
-        <R.MoreInfo></R.MoreInfo>
+        <R.MoreInfo>
+            <Loading/>
+        </R.MoreInfo>
       ) : (
         <R.MiniModal>
           <R.LoginWrapper>
@@ -87,9 +112,17 @@ const RequestHelp = () => {
               value={userNumber}
               onChange={e => loginInputHandler(e.target.value)}
             ></R.LoginInput>
-            <R.LoginButon>버튼</R.LoginButon>
+            <R.LoginButon onClick={makeLogin}>인증</R.LoginButon>
             </R.GetPhoneWrapper>
-
+            {/* <R.GetPhoneWrapper>
+            <R.LoginInput
+              placeholder='인증번호'
+              type="text"
+              value={certNumber}
+              onChange={e => setCertNumber(e.target.value)}
+            ></R.LoginInput>
+            <R.LoginButon>인증</R.LoginButon>
+            </R.GetPhoneWrapper> */}
           </R.LoginWrapper>
         </R.MiniModal>
       )}
