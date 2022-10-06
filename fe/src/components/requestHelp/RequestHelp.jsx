@@ -9,7 +9,7 @@ import currentLoc from '../../static/requested/currentLoc.svg'
 
 import loading from '../../static/requested/loading.svg'
 
-import socketio from "socket.io-client"
+import socketio from 'socket.io-client'
 
 const Loading = () => {
   return (
@@ -25,60 +25,80 @@ const Loading = () => {
 }
 
 const RequestHelp = () => {
-    // 소켓 연결
-  const socket = socketio.connect("https://2022hackathon.bssm.kro.kr/match")
+  // 소켓 연결
+  const socket = socketio.connect('https://2022hackathon.bssm.kro.kr/match')
 
-    const [location, setLocation] = useRecoilState(storedLocation)
-    const [isLogin, setIsLogin] = useRecoilState(storedIsLogin)
+  const [location, setLocation] = useRecoilState(storedLocation)
+  const [isLogin, setIsLogin] = useRecoilState(storedIsLogin)
+
 
   // 로그인이 안 되 었을 때 사용할 state
+  const [inputNum,setInputNum] = useState('')
+
   const [userNumber, setUserNumber] = useState('')
-  const [certNumber, setCertNumber] = useState('')
-
-  function connectSocket(){
-    console.log("소켓 연결",userNumber)
-    socket.emit('match',{phoneNumber:userNumber})
-    socket.on('match',(msg) => {
-        console.log(msg)
-    })
-  }
-
-  useEffect(() => {
-    const userNum = localStorage.getItem('userNumber')
-    setUserNumber(userNum === null ? '' : userNum)
-    if (userNum) {
-      setIsLogin(true)
-      connectSocket()
-    } 
-  }, [])
-  
+  //   const [certNumber, setCertNumber] = useState('')
 
   // 전화번호 커스텀
   useEffect(() => {
-    if (String(userNumber).length === 10) {
-      setUserNumber(userNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'))
+    if (String(inputNum).length === 10) {
+        setInputNum(inputNum.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'))
     }
-    if (String(userNumber).length === 13) {
-      setUserNumber(
-        userNumber
+    if (String(inputNum).length === 13) {
+        setInputNum(
+        inputNum
           .replace(/-/g, '')
           .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
       )
     }
-  }, [userNumber])
+  }, [inputNum])
+
+  // -------------
+
+  // 소켓 연결
+  function connectSocket(num) {
+    console.log('소켓 연결', num)
+    socket.emit('match', { phoneNumber: num })
+    socket.on('match', msg => {
+      console.log(msg)
+    })
+  }
+
+  useEffect(() => {
+    const storageNum = localStorage.getItem('userNumber');
+    setUserNumber(storageNum === null ? '' : storageNum)
+    setIsLogin(storageNum === null ? false : true)
+
+    // 로그인 되어 있을 때의 소켓 통신
+    if (storageNum !== null){
+        connectSocket(userNumber)
+    }
+  },[])
+
+  ////   userNumber를 가져와서
+  //   useEffect(() => {
+  //     const userNum = localStorage.getItem('userNumber')
+  //     setUserNumber(userNum === null ? '' : userNum)
+  //     if (userNumber) {
+  //       connectSocket()
+  //     }
+  //   }, [])
+
+
+  // ------ 로그인 안 됐을 때
 
   function loginInputHandler(value) {
-    setUserNumber(value)
+    setInputNum(value)
   }
 
-  function makeLogin() {
+  // 인증 버튼을 눌렀을 때
+  function submitLogin() {
     setIsLogin(true)
-    setUserNumber(localStorage.setItem('userNumber', userNumber))
-    connectSocket()
+    localStorage.setItem('userNumber', inputNum)
   }
 
-  
+//   useEffect(() => {
 
+//   },[userNumber])
 
   return (
     <R.Wrapper>
@@ -125,10 +145,10 @@ const RequestHelp = () => {
               <R.LoginInput
                 placeholder="전화번호"
                 type="text"
-                value={userNumber}
+                value={inputNum}
                 onChange={e => loginInputHandler(e.target.value)}
               ></R.LoginInput>
-              <R.LoginButon onClick={makeLogin}>인증</R.LoginButon>
+              <R.LoginButon onClick={submitLogin}>인증</R.LoginButon>
             </R.GetPhoneWrapper>
           </R.LoginWrapper>
         </R.MiniModal>
