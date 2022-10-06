@@ -70,7 +70,7 @@ export const Input = styled.input`
 `
 
 export const LoginBtn = styled.button`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   border: none;
   background: #ff8450;
   color: #fff;
