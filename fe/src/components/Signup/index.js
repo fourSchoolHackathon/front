@@ -96,7 +96,7 @@ const Signup = () => {
   return (
     <S.Wrapper>
       <S.Content onSubmit={handleSubmit(onSubmit)}>
-        <Style.Title>할미</Style.Title>
+        <Style.Title>어깨동무</Style.Title>
         <Style.LoginWrapper>
           <Style.InputWrapper>
             <Style.Label>실명</Style.Label>

@@ -22,11 +22,11 @@ const Main = () => {
 
   const navigate = useNavigate()
 
-    useEffect(() => {
-        if (localStorage.getItem('access_token')) {
-            subscribe();
-        }
-    }, []);
+  useEffect(() => {
+    if (localStorage.getItem('access_token')) {
+      subscribe()
+    }
+  }, [])
 
   function getLocation() {
     if (navigator.geolocation) {
@@ -102,7 +102,7 @@ const Main = () => {
   const [selected, setSelected] = useState([])
 
   const [startTime, setStartTime] = useState(
-    `${now.getFullYear()}-${`${now.getMonth()+1}`.padStart(
+    `${now.getFullYear()}-${`${now.getMonth() + 1}`.padStart(
       2,
       '0'
     )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(
@@ -112,7 +112,7 @@ const Main = () => {
   )
 
   const [endTime, setEndTime] = useState(
-    `${now.getFullYear()}-${`${now.getMonth()+1}`.padStart(
+    `${now.getFullYear()}-${`${now.getMonth() + 1}`.padStart(
       2,
       '0'
     )}-${`${now.getDate()}`.padStart(2, '0')}T${`${
@@ -172,7 +172,7 @@ const Main = () => {
   return (
     <M.Wrapper>
       <M.HeaderWrapper>
-        <h2>할미</h2>
+        <h2>어깨동무</h2>
         {localStorage.getItem('access_token') ? (
           <a onClick={onLogout}>로그아웃</a>
         ) : (

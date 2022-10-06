@@ -36,7 +36,7 @@ const Siginin = () => {
   return (
     <S.Wrapper>
       <S.Content onSubmit={handleSubmit(onSubmit)}>
-        <S.Title>할미</S.Title>
+        <S.Title>어깨동무</S.Title>
         <S.LoginWrapper>
           <S.InputWrapper>
             <S.Label>아이디</S.Label>
