@@ -31,9 +31,8 @@ const RequestHelp = () => {
   const [location, setLocation] = useRecoilState(storedLocation)
   const [isLogin, setIsLogin] = useRecoilState(storedIsLogin)
 
-
   // 로그인이 안 되 었을 때 사용할 state
-  const [inputNum,setInputNum] = useState('')
+  const [inputNum, setInputNum] = useState('')
 
   const [userNumber, setUserNumber] = useState('')
   //   const [certNumber, setCertNumber] = useState('')
@@ -41,13 +40,11 @@ const RequestHelp = () => {
   // 전화번호 커스텀
   useEffect(() => {
     if (String(inputNum).length === 10) {
-        setInputNum(inputNum.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'))
+      setInputNum(inputNum.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'))
     }
     if (String(inputNum).length === 13) {
-        setInputNum(
-        inputNum
-          .replace(/-/g, '')
-          .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
+      setInputNum(
+        inputNum.replace(/-/g, '').replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
       )
     }
   }, [inputNum])
@@ -56,24 +53,22 @@ const RequestHelp = () => {
 
   // 소켓 연결
   function connectSocket(num) {
-    console.log('소켓 연결', num)
-    socket.emit('match', { phoneNumber: num })
-    socket.on('match', msg => {
-      console.log(msg)
-    })
+      console.log('소켓 연결', num)
+      socket.emit('match', { phoneNumber: num })
+      socket.on('match', msg => {
+        console.log(msg)
+      })
   }
 
   useEffect(() => {
-    const storageNum = localStorage.getItem('userNumber');
+    const storageNum = localStorage.getItem('userNumber')
     setUserNumber(storageNum === null ? '' : storageNum)
     setIsLogin(storageNum === null ? false : true)
 
-    // 로그인 되어 있을 때의 소켓 통신
-    if (storageNum !== null){
-        connectSocket(storageNum)
+    if (storageNum !== null) {
+      connectSocket(storageNum)
     }
-  },[])
-
+  }, [])
 
   // ------ 로그인 안 됐을 때
 

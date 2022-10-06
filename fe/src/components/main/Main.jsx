@@ -58,7 +58,6 @@ const Main = () => {
     toggleIsLogin();
     getLocation()
     console.log('간단한 도움 요청')
-    console.log('소켓 연결')
     navigate('/req')
   }
   function categoryRequest() {
@@ -66,7 +65,6 @@ const Main = () => {
       toggleIsLogin()
       getLocation()
       console.log('카테고리 도움 요청', gender, selected, startTime,endTime)
-      console.log("소켓 연결")
       navigate('/req')
     } else {
       alert('카테고리를 완성해주세요')
