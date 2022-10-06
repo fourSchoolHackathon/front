@@ -51,6 +51,7 @@ export const CheckBoxWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
+  margin-bottom: 2rem;
 `
 
 export const CheckBoxBorder = styled.label`
@@ -73,7 +74,6 @@ export const InputWrapper = styled.div`
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  margin-bottom: 2rem;
 `
 
 export const FakeInput = styled.div`

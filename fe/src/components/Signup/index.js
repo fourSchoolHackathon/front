@@ -121,6 +121,26 @@ const Signup = () => {
           </Style.InputWrapper>
 
           <Style.InputWrapper>
+            <Style.Label>주소 검색</Style.Label>
+            <S.InputWrapper>
+              <Style.Input
+                value={address}
+                readOnly
+                {...register('address', { required: '주소는 필수 값입니다' })}
+                aria-invalid={errors.address ? 'true' : 'false'}
+              />
+              <S.Button onClick={() => setModal(true)} type="button">
+                주소검색
+              </S.Button>
+            </S.InputWrapper>
+            {errors.address && (
+              <Style.Label style={{ color: 'red' }} role="alert">
+                {errors.address?.message}
+              </Style.Label>
+            )}
+          </Style.InputWrapper>
+
+          <Style.InputWrapper>
             <Style.Label>도움을 줄 수 있는 분야</Style.Label>
             <S.CheckBoxWrapper>
               {categories.map((category, i) => (
@@ -140,16 +160,6 @@ const Signup = () => {
                 </S.CheckBoxBorder>
               ))}
             </S.CheckBoxWrapper>
-          </Style.InputWrapper>
-
-          <Style.InputWrapper>
-            <Style.Label>주소 검색</Style.Label>
-            <S.InputWrapper>
-              <S.FakeInput>{address}</S.FakeInput>
-              <S.Button onClick={() => setModal(true)} type="button">
-                주소검색
-              </S.Button>
-            </S.InputWrapper>
           </Style.InputWrapper>
         </Style.LoginWrapper>
 
