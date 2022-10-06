@@ -57,12 +57,12 @@ export const Input = styled.input`
   max-width: 20rem;
   width: 90%;
   height: 2.5rem;
+  outline: none;
   box-sizing: border-box;
   border-radius: 0.7rem;
   border: 1px solid #e4e4e4;
   padding: 0 0.7rem;
   font-size: 1rem;
-  outline-color: #ff8450;
 
   ::placeholder {
     color: #e1e1e1;
@@ -70,7 +70,7 @@ export const Input = styled.input`
 `
 
 export const LoginBtn = styled.button`
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   border: none;
   background: #ff8450;
   color: #fff;
