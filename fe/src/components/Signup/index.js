@@ -19,18 +19,17 @@ const categories = [
 
 const Signup = () => {
   // 위도경도가 저장
-  const [exactLocation,setExactLocation] = useState({lat:0,lng:0})
+  const [exactLocation, setExactLocation] = useState({ lat: 0, lng: 0 })
 
   const { kakao } = window
   const geocoder = new kakao.maps.services.Geocoder()
 
-  function searchAdd(string){
-    geocoder.addressSearch(string,(result,status) => {
-      if(status === kakao.maps.services.Status.OK){
+  function searchAdd(string) {
+    geocoder.addressSearch(string, (result, status) => {
+      if (status === kakao.maps.services.Status.OK) {
         // console.log(result)
         // temp = [result[0].y,result[0].x]
-        setExactLocation({lat:result[0].y,lng:result[0].x})
-           
+        setExactLocation({ latitude: result[0].y, longitude: result[0].x })
       }
     })
   }
@@ -47,11 +46,10 @@ const Signup = () => {
   const [address, setAddress] = useState('')
 
   useEffect(() => {
-    if (address.length > 0){
+    if (address.length > 0) {
       searchAdd(address)
     }
-  },[address])
-
+  }, [address])
 
   const onSubmit = async form => {
     if (!address) {
@@ -71,10 +69,17 @@ const Signup = () => {
     try {
       setLoading(true)
 
-      console.log(address)
-      console.log(exactLocation)
+      console.log({
+        ...form,
+        ...exactLocation,
+        address: undefined
+      })
 
-      const { data } = await api.post('/user/signup', form)
+      const { data } = await api.post('/user/signup', {
+        ...form,
+        ...exactLocation,
+        address: undefined
+      })
       setLoading(false)
 
       localStorage.setItem('access_token', data.access_token)
