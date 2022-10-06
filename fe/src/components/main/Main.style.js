@@ -12,10 +12,18 @@ export const HeaderWrapper = styled.div`
   height: 60px;
   border-bottom: 1px solid rgb(239, 239, 239);
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  > div {
-    margin-left: 20px;
-    font-weight: bold;
+  padding: 0 2rem;
+  box-sizing: border-box;
+
+  a {
+    color: #000;
+    text-decoration: none;
+
+    :hover {
+      text-decoration: underline;
+    }
   }
 `
 
@@ -181,7 +189,7 @@ export const SplitInput = styled.div`
     height: 30px;
     border-radius: 10px;
     padding: 8px;
-    border:1px #b6b3b3 solid;
+    border: 1px #b6b3b3 solid;
     /* font-size:15px; */
     /* border:none; */
   }

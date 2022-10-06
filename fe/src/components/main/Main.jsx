@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import * as M from './Main.style'
 
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { useRecoilState } from 'recoil'
-import { storedLocation,storedIsLogin } from '../../stores/location/location'
-import { storedReqKind,storedCategoryInfo } from '../../stores/requestInfo/requestInfo'
+import { storedLocation, storedIsLogin } from '../../stores/location/location'
+import {
+  storedReqKind,
+  storedCategoryInfo
+} from '../../stores/requestInfo/requestInfo'
 
 const Main = () => {
-
   //카테고리인지 아닌지
-  const [reqKind,setReqKind] = useRecoilState(storedReqKind);
+  const [reqKind, setReqKind] = useRecoilState(storedReqKind)
   // 카테고리
-  const [categoryInfo,setCategoryInfo] = useRecoilState(storedCategoryInfo)
-  
+  const [categoryInfo, setCategoryInfo] = useRecoilState(storedCategoryInfo)
+
   const [location, setLocation] = useRecoilState(storedLocation)
-  const [isLogin,setIsLogin]  = useRecoilState(storedIsLogin)
+  const [isLogin, setIsLogin] = useRecoilState(storedIsLogin)
 
   const navigate = useNavigate()
 
@@ -26,7 +28,7 @@ const Main = () => {
         function (position) {
           // console.log(position.coords.latitude + ' ' + position.coords.longitude);
           // 저장 후 리다이렉션
-          
+
           setLocation({
             lat: position.coords.latitude,
             lng: position.coords.longitude
@@ -47,21 +49,22 @@ const Main = () => {
     }
   }
 
-
-  function getUserNumber(){
+  function getUserNumber() {
     return localStorage.getItem('userNumber')
   }
 
-  function toggleIsLogin(){
-    if (getUserNumber() === null){ // 연결이 이미 되어 있다면 getLocation
+  function toggleIsLogin() {
+    if (getUserNumber() === null) {
+      // 연결이 이미 되어 있다면 getLocation
       setIsLogin(false)
-    } else { // userNumber가 없다면
+    } else {
+      // userNumber가 없다면
       setIsLogin(true)
     }
   }
 
   function simpleReques() {
-    toggleIsLogin();
+    toggleIsLogin()
     getLocation()
     console.log('간단한 도움 요청')
     setReqKind('simple')
@@ -71,13 +74,13 @@ const Main = () => {
     if (gender !== '' && selected !== []) {
       toggleIsLogin()
       getLocation()
-      console.log('카테고리 도움 요청', gender, selected, startTime,endTime)
+      console.log('카테고리 도움 요청', gender, selected, startTime, endTime)
       setReqKind('category')
       setCategoryInfo({
-        category_list:selected,
-        start_at:startTime,
-        end_at:endTime,
-        sex:gender,
+        category_list: selected,
+        start_at: startTime,
+        end_at: endTime,
+        sex: gender
       })
       navigate('/req')
     } else {
@@ -95,23 +98,20 @@ const Main = () => {
     `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
       2,
       '0'
-    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(
+    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(
       2,
       '0'
-    )}`
+    )}:${`${now.getMinutes()}`.padStart(2, '0')}`
   )
 
   const [endTime, setEndTime] = useState(
     `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
       2,
       '0'
-    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()+2 > 23 ? now.getHours()+2-24 : now.getHours()+2}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(
-      2,
-      '0'
-    )}`
-
+    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${
+      now.getHours() + 2 > 23 ? now.getHours() + 2 - 24 : now.getHours() + 2
+    }`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(2, '0')}`
   )
-
 
   const service = [
     '이동보조',
@@ -122,8 +122,7 @@ const Main = () => {
     '배변보조',
     '체위변경',
     '투약보조',
-    '운동보조',
-    '기타'
+    '운동보조'
   ]
 
   /**인자값으로 들어온 서비스가 이미 선택된 것이라면 true */
@@ -145,9 +144,9 @@ const Main = () => {
    * @index T로 나웠을 때 index
    * @value 변경할 값
    */
-  function timeHandler(point,index, value) {
-    let temp;
-    if (point === "start"){
+  function timeHandler(point, index, value) {
+    let temp
+    if (point === 'start') {
       temp = startTime.split('T')
       temp[index] = value
       setStartTime(temp.join(''))
@@ -156,15 +155,15 @@ const Main = () => {
       temp[index] = value
       setEndTime(temp.join(''))
     }
-
   }
-
-
 
   return (
     <M.Wrapper>
       <M.HeaderWrapper>
-        <div>해커톤 드가자</div>
+        <h2>할미</h2>
+        <div>
+          <Link to="/signin">로그인</Link> / <Link to="/signup">회원가입</Link>
+        </div>
       </M.HeaderWrapper>
 
       <M.SimpleReqWrapper>
@@ -225,7 +224,7 @@ const Main = () => {
                 <input
                   type="date"
                   defaultValue={startTime.split('T')[0]}
-                  onChange={e => timeHandler("start",0, e.target.value)}
+                  onChange={e => timeHandler('start', 0, e.target.value)}
                 />
               </M.SplitInput>
               <M.SplitInput>
@@ -233,7 +232,7 @@ const Main = () => {
                 <input
                   type="date"
                   defaultValue={endTime.split('T')[0]}
-                  onChange={e => timeHandler("end",0, e.target.value)}
+                  onChange={e => timeHandler('end', 0, e.target.value)}
                 />
               </M.SplitInput>
             </M.InputsWrapper>
@@ -243,7 +242,7 @@ const Main = () => {
                 <input
                   type="time"
                   defaultValue={startTime.split('T')[1]}
-                  onChange={e => timeHandler("start",1, e.target.value)}
+                  onChange={e => timeHandler('start', 1, e.target.value)}
                 />
               </M.SplitInput>
               <M.SplitInput>
@@ -251,7 +250,7 @@ const Main = () => {
                 <input
                   type="time"
                   defaultValue={endTime.split('T')[1]}
-                  onChange={e => timeHandler("end",1, e.target.value)}
+                  onChange={e => timeHandler('end', 1, e.target.value)}
                 />
               </M.SplitInput>
             </M.InputsWrapper>
