@@ -9,6 +9,7 @@ import {
   storedReqKind,
   storedCategoryInfo
 } from '../../stores/requestInfo/requestInfo'
+import { subscribe } from '../../utils/webPush'
 
 const Main = () => {
   //카테고리인지 아닌지
@@ -20,6 +21,12 @@ const Main = () => {
   const [isLogin, setIsLogin] = useRecoilState(storedIsLogin)
 
   const navigate = useNavigate()
+
+    useEffect(() => {
+        if (localStorage.getItem('access_token')) {
+            subscribe();
+        }
+    }, []);
 
   function getLocation() {
     if (navigator.geolocation) {
