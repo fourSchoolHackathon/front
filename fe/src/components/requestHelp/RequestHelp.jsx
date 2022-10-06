@@ -4,14 +4,19 @@ import { Circle, Map, MapMarker, ZoomControl } from 'react-kakao-maps-sdk'
 
 import { useRecoilState } from 'recoil'
 import { storedLocation, storedIsLogin } from '../../stores/location/location'
+import {
+  storedReqKind,
+  storedCategoryInfo
+} from '../../stores/requestInfo/requestInfo'
 
-import loading from "../../static/requested/loading.svg"
+import loading from '../../static/requested/loading.svg'
 import currentLoc from '../../static/requested/currentLoc.svg'
 // import helper from "../../static/requested/currentHelper.svg"
-import helper from "../../static/requested/helper.svg"
+import helper from '../../static/requested/helper.svg'
 
 import socketio from 'socket.io-client'
 
+import api from '../../common/api'
 
 const Loading = () => {
   return (
@@ -24,19 +29,21 @@ const Loading = () => {
   )
 }
 
-const Alert = ({helperName}) => {
-    return (
-        <R.AlertWrapper>
-            <h3>돌봄이가 매칭되었습니다</h3>
-            <p>곧 "{helperName}" 돌봄이로부터 전화가 옵니다</p>
-        </R.AlertWrapper>
-    )
+const Alert = ({ helperName }) => {
+  return (
+    <R.AlertWrapper>
+      <h3>돌봄이가 매칭되었습니다</h3>
+      <p>곧 "{helperName}" 돌봄이로부터 전화가 옵니다</p>
+    </R.AlertWrapper>
+  )
 }
 
 const RequestHelp = () => {
+  // ---------
+
   // 소켓 연결
-  const socket = socketio('https://2022hackathon.bssm.kro.kr/match',{
-    transports:['websocket']
+  const socket = socketio('https://2022hackathon.bssm.kro.kr/match', {
+    transports: ['websocket']
   })
 
   const [location, setLocation] = useRecoilState(storedLocation)
@@ -49,15 +56,50 @@ const RequestHelp = () => {
   //   const [certNumber, setCertNumber] = useState('')
 
   // 매칭되는지 아닌지
-  const [matching,setMatching] = useState(false);
+  const [matching, setMatching] = useState(false)
 
   // 도우미 정보
-  const [helperInfo,setHelperInfo] = useState({
-    name:"",
-    lat:"",
-    lng:"",
+  const [helperInfo, setHelperInfo] = useState({
+    name: '',
+    lat: '',
+    lng: ''
   })
-  
+
+  // -------------------
+
+  // 서버통신
+  const [reqKind, setReqKind] = useRecoilState(storedReqKind)
+  const [categoryInfo, setCategoryInfo] = useRecoilState(storedCategoryInfo)
+  const [loading, setLoading] = useState(false)
+
+
+  async function postServer(num) {
+    if (loading) return
+    setLoading(true)
+    if (reqKind === 'simple') {
+    //   console.log(num)
+    //   console.log(location)
+      const {data} = await api.post('/application/urgent',{
+          phone_number:num,
+          latitude:location.lat,
+          longitude:location.lng
+      })
+    } else {
+        // console.log(num)
+        // console.log(location)
+        // console.log(categoryInfo)
+      const {data} = await api.post('/application',{
+        phone_number:num,
+        category_list:categoryInfo.category_list,
+        start_at:categoryInfo.start_at,
+        end_at:categoryInfo.end_at,
+        sex:categoryInfo.sex
+      })
+    }
+    setLoading(false)
+  }
+
+  // -------------------
 
   // 전화번호 커스텀
   useEffect(() => {
@@ -76,16 +118,15 @@ const RequestHelp = () => {
   // 소켓 연결
   function connectSocket(num) {
     // console.log(num.split('-').join(''))
-      console.log('소켓 연결', num.split('-').join(''))
-      socket.emit('match', { phoneNumber: num.split('-').join('') })
-      socket.on('matchSuccess', msg => {
-        setMatching(true)
-        setHelperInfo({name:msg.name,lat:msg.latitude,lng:msg.longitude})
-        //   {name: 'test', latitude: 30, longitude: 20}
-        console.log(msg)
-      })
+    console.log('소켓 연결', num.split('-').join(''))
+    socket.emit('match', { phoneNumber: num.split('-').join('') })
+    socket.on('matchSuccess', msg => {
+      setMatching(true)
+      setHelperInfo({ name: msg.name, lat: msg.latitude, lng: msg.longitude })
+      //   {name: 'test', latitude: 30, longitude: 20}
+      console.log(msg)
+    })
   }
-
 
   useEffect(() => {
     const storageNum = localStorage.getItem('userNumber')
@@ -93,6 +134,7 @@ const RequestHelp = () => {
     setIsLogin(storageNum === null ? false : true)
 
     if (storageNum !== null) {
+        postServer(storageNum)
       connectSocket(storageNum)
     }
   }, [])
@@ -107,6 +149,7 @@ const RequestHelp = () => {
   function submitLogin() {
     setIsLogin(true)
     localStorage.setItem('userNumber', inputNum)
+    postServer(inputNum)
     connectSocket(inputNum)
   }
 
@@ -133,28 +176,27 @@ const RequestHelp = () => {
             }
           }}
         />
-        {
-            helperInfo.name && 
-            <MapMarker
-              position={{
-                lat:helperInfo.lat,
-                lng:helperInfo.lng
-              }}
-              image={{
-                src:helper,
-                size:{
-                    width:50,
-                    height:50
-                },
-                options:{
-                    offset:{
-                        x:25,
-                        y:36
-                    }
+        {helperInfo.name && (
+          <MapMarker
+            position={{
+              lat: helperInfo.lat,
+              lng: helperInfo.lng
+            }}
+            image={{
+              src: helper,
+              size: {
+                width: 50,
+                height: 50
+              },
+              options: {
+                offset: {
+                  x: 25,
+                  y: 36
                 }
-              }}
-            />
-        }
+              }
+            }}
+          />
+        )}
         <Circle
           center={location}
           radius={5000} // 미터 단위
@@ -168,7 +210,7 @@ const RequestHelp = () => {
       </Map>
       {isLogin ? (
         <R.MoreInfo>
-          {matching ? <Alert helperName={helperInfo.name} /> : <Loading /> }
+          {matching ? <Alert helperName={helperInfo.name} /> : <Loading />}
         </R.MoreInfo>
       ) : (
         <R.MiniModal>
