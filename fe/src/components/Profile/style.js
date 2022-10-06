@@ -78,13 +78,22 @@ export const Active = styled.li`
   }
 `
 
-export const ActiveTitle = styled.h2`
-  margin: 0;
+export const Badges = styled.div`
+  margin-top: 1rem;
 `
 
-export const ActiveDate = styled.p`
+export const Badge = styled.span`
+  border-radius: 1rem;
+  border: 2px solid #f7a583;
+  display: inline;
+  padding: 0.2rem 0.5rem;
+  font-weight: bold;
+  color: #aaa;
+  margin-right: 0.5rem;
+`
+
+export const ActiveDate = styled.h3`
   margin: 0;
-  color: #d1d1d1;
 `
 
 export const ActiveAddress = styled.p`
