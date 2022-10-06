@@ -4,25 +4,28 @@ import * as M from './Main.style'
 import { useNavigate } from 'react-router-dom'
 
 import { useRecoilState } from 'recoil'
-import { storedLocation } from '../../stores/location/location'
+import { storedLocation,storedIsLogin } from '../../stores/location/location'
 
 const Main = () => {
   const [location, setLocation] = useRecoilState(storedLocation)
+  const [isLogin,setIsLogin]  = useRecoilState(storedIsLogin)
 
   const navigate = useNavigate()
 
   function getLocation() {
+    let returnLocation;
     if (navigator.geolocation) {
       // GPS를 지원하면
       navigator.geolocation.getCurrentPosition(
         function (position) {
           // console.log(position.coords.latitude + ' ' + position.coords.longitude);
           // 저장 후 리다이렉션
+          
           setLocation({
             lat: position.coords.latitude,
             lng: position.coords.longitude
           })
-          navigate('/req')
+          // navigate('/req')
         },
         function (error) {
           console.error(error)
@@ -33,63 +36,48 @@ const Main = () => {
           timeout: Infinity
         }
       )
+      // return returnLocation
     } else {
       alert('GPS를 지원하지 않습니다')
     }
   }
 
-  // 일단 웹 플로우 상으론 이게 맞음, 바로 requested로 들어오면 답없음
+  function getUserNumber(){
+    return localStorage.getItem('userNumber')
+  }
+
+  function toggleIsLogin(){
+    if (getUserNumber){ // 연결이 이미 되어 있다면 getLocation
+      setIsLogin(true)
+    } else { // userNumber가 없다면
+      setIsLogin(false)
+    }
+  }
+
   function simpleReques() {
-    console.log('간단한 도움 요청')
+    
+    toggleIsLogin();
+    
     getLocation()
+    console.log('간단한 도움 요청')
+    navigate('/req')
   }
   function categoryRequest() {
     if (gender !== '' && selected !== []) {
-      console.log('카테고리 도움 요청', gender, selected, startTime,endTime)
+      toggleIsLogin()
       getLocation()
+      console.log('카테고리 도움 요청', gender, selected, startTime,endTime)
+      navigate('/req')
     } else {
       alert('카테고리를 완성해주세요')
     }
   }
-
-  //   useEffect(() => {
-  //     console.log(location)
-  //   }, [location])
 
   // -------
 
   const now = new Date()
   const [gender, setGender] = useState('')
   const [selected, setSelected] = useState([])
-
-  // const [time, setTime] = useState(
-  //   `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
-  //     2,
-  //     '0'
-  //   )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(
-  //     2,
-  //     '0'
-  //   )}:${`${now.getMinutes()}`.padStart(
-  //     2,
-  //     '0'
-  //   )}T${now.getFullYear()}-${`${now.getMonth()}`.padStart(
-  //     2,
-  //     '0'
-  //   )}-${`${now.getDate()}`.padStart(2, '0')}T${`${
-  //     now.getHours() + 2
-  //   }`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(2, '0')}`
-  // )
-
-    // `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
-    //   2,
-    //   '0'
-    // )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(
-    //   2,
-    //   '0'
-    // )}:${`${now.getMinutes()}`.padStart(
-    //   2,
-    //   '0'
-    // )}
 
   const [startTime, setStartTime] = useState(
     `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
