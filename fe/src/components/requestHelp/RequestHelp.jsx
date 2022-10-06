@@ -33,7 +33,13 @@ const Alert = ({ helperName }) => {
   return (
     <R.AlertWrapper>
       <h3>돌봄이가 매칭되었습니다</h3>
-      <p>곧 "{helperName}" 돌봄이로부터 전화가 옵니다</p>
+      <div>
+        <span>곧 </span>
+        <span>{helperName}</span>
+        <span> 돌봄이로부터 전화가 옵니다</span>
+      </div>
+      {/* 곧 <span>{helperName}</span> 돌봄이로부터 전화가 옵니다 */}
+      {/* <p>곧 "{helperName}" 돌봄이로부터 전화가 옵니다</p> */}
     </R.AlertWrapper>
   )
 }

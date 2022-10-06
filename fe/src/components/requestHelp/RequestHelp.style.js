@@ -12,7 +12,7 @@ export const MoreInfo = styled.div`
   right: 20px;
   bottom: 50px;
   width: 70%;
-  padding:20px;
+  padding: 20px;
   z-index: 1;
   background-color: white;
   border-radius: 20px 20px 0px 20px;
@@ -89,67 +89,49 @@ const myAni = keyframes`
 export const LoadingWrapper = styled.div`
   width: 100%;
   height: 40px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  align-items:center;
-  >p{
-    margin:0px;
-    font-size:13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-items: center;
+  > p {
+    margin: 0px;
+    font-size: 13px;
   }
 `
 
 export const LoadBar = styled.div`
-    width:100%;
-    display: flex;
+  width: 100%;
+  display: flex;
   justify-content: Center;
   align-items: center;
-  >h3{
+  > h3 {
     margin: 0px;
   }
   > img {
     height: 35px;
     margin-left: 15px;
-    animation:${myAni} 1s infinite;
+    animation: ${myAni} 1s infinite;
   }
 `
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export const AlertWrapper = styled.div`
-    width:100%;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    > h3{
-        margin:0px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  > h3 {
+    margin: 0px;
+  }
+  > div {
+    > span {
+      margin: 0px;
+      margin-top: 7px;
+      font-size: 13px;
     }
-    >p{
-        margin:0px;
-        margin-top:7px;
-        font-size:13px;
+    >span:nth-child(2){
+        color:#ff8450;
+        font-weight:bold;
+        font-size:17px;
     }
+  }
 `
