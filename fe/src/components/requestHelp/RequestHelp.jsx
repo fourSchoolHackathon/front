@@ -77,24 +77,30 @@ const RequestHelp = () => {
     if (loading) return
     setLoading(true)
     if (reqKind === 'simple') {
-    //   console.log(num)
-    //   console.log(location)
-      const {data} = await api.post('/application/urgent',{
-          phone_number:num,
-          latitude:location.lat,
-          longitude:location.lng
-      })
+        console.log("간단한 요청")
+        //   console.log(num)
+        //   console.log(location)
+        const {data} = await api.post('/application/urgent',{
+            phone_number:num.split("-").join(''),
+            latitude:location.lat,
+            longitude:location.lng
+        })
+        console.log(data)
     } else {
         // console.log(num)
         // console.log(location)
         // console.log(categoryInfo)
+        console.log("카테고리 요청")
       const {data} = await api.post('/application',{
-        phone_number:num,
+        phone_number:num.split("-").join(''),
         category_list:categoryInfo.category_list,
         start_at:categoryInfo.start_at,
         end_at:categoryInfo.end_at,
-        sex:categoryInfo.sex
+        sex:categoryInfo.sex === "남자" ? "M" : "F",
+        latitude:location.lat,
+        longitude:location.lng
       })
+      console.log(data)
     }
     setLoading(false)
   }
