@@ -5,8 +5,15 @@ import { useNavigate } from 'react-router-dom'
 
 import { useRecoilState } from 'recoil'
 import { storedLocation,storedIsLogin } from '../../stores/location/location'
+import { storedReqKind,storedCategoryInfo } from '../../stores/requestInfo/requestInfo'
 
 const Main = () => {
+
+  //카테고리인지 아닌지
+  const [reqKind,setReqKind] = useRecoilState(storedReqKind);
+  // 카테고리
+  const [categoryInfo,setCategoryInfo] = useRecoilState(storedCategoryInfo)
+  
   const [location, setLocation] = useRecoilState(storedLocation)
   const [isLogin,setIsLogin]  = useRecoilState(storedIsLogin)
 
@@ -54,7 +61,6 @@ const Main = () => {
   }
 
   function simpleReques() {
-    
     toggleIsLogin();
     getLocation()
     console.log('간단한 도움 요청')

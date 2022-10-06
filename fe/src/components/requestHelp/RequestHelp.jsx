@@ -5,28 +5,39 @@ import { Circle, Map, MapMarker, ZoomControl } from 'react-kakao-maps-sdk'
 import { useRecoilState } from 'recoil'
 import { storedLocation, storedIsLogin } from '../../stores/location/location'
 
+import loading from "../../static/requested/loading.svg"
 import currentLoc from '../../static/requested/currentLoc.svg'
-
-import loading from '../../static/requested/loading.svg'
+// import helper from "../../static/requested/currentHelper.svg"
+import helper from "../../static/requested/helper.svg"
 
 import socketio from 'socket.io-client'
+
 
 const Loading = () => {
   return (
     <R.LoadingWrapper>
       <R.LoadBar>
         <h3>매칭중입니다</h3>
-        {/* <img src={loading} /> */}
         <img src={loading} alt="로딩중" />
       </R.LoadBar>
-      <p>곧 돌보미로부터 전화가 옴니다</p>
     </R.LoadingWrapper>
   )
 }
 
+const Alert = ({helperName}) => {
+    return (
+        <R.AlertWrapper>
+            <h3>돌봄이가 매칭되었습니다</h3>
+            <p>곧 "{helperName}" 돌봄이로부터 전화가 옵니다</p>
+        </R.AlertWrapper>
+    )
+}
+
 const RequestHelp = () => {
   // 소켓 연결
-  const socket = socketio.connect('https://2022hackathon.bssm.kro.kr/match')
+  const socket = socketio('https://2022hackathon.bssm.kro.kr/match',{
+    transports:['websocket']
+  })
 
   const [location, setLocation] = useRecoilState(storedLocation)
   const [isLogin, setIsLogin] = useRecoilState(storedIsLogin)
@@ -36,6 +47,17 @@ const RequestHelp = () => {
 
   const [userNumber, setUserNumber] = useState('')
   //   const [certNumber, setCertNumber] = useState('')
+
+  // 매칭되는지 아닌지
+  const [matching,setMatching] = useState(false);
+
+  // 도우미 정보
+  const [helperInfo,setHelperInfo] = useState({
+    name:"",
+    lat:"",
+    lng:"",
+  })
+  
 
   // 전화번호 커스텀
   useEffect(() => {
@@ -53,12 +75,17 @@ const RequestHelp = () => {
 
   // 소켓 연결
   function connectSocket(num) {
-      console.log('소켓 연결', num)
-      socket.emit('match', { phoneNumber: num })
-      socket.on('match', msg => {
+    // console.log(num.split('-').join(''))
+      console.log('소켓 연결', num.split('-').join(''))
+      socket.emit('match', { phoneNumber: num.split('-').join('') })
+      socket.on('matchSuccess', msg => {
+        setMatching(true)
+        setHelperInfo({name:msg.name,lat:msg.latitude,lng:msg.longitude})
+        //   {name: 'test', latitude: 30, longitude: 20}
         console.log(msg)
       })
   }
+
 
   useEffect(() => {
     const storageNum = localStorage.getItem('userNumber')
@@ -106,6 +133,28 @@ const RequestHelp = () => {
             }
           }}
         />
+        {
+            helperInfo.name && 
+            <MapMarker
+              position={{
+                lat:helperInfo.lat,
+                lng:helperInfo.lng
+              }}
+              image={{
+                src:helper,
+                size:{
+                    width:50,
+                    height:50
+                },
+                options:{
+                    offset:{
+                        x:25,
+                        y:36
+                    }
+                }
+              }}
+            />
+        }
         <Circle
           center={location}
           radius={5000} // 미터 단위
@@ -119,7 +168,7 @@ const RequestHelp = () => {
       </Map>
       {isLogin ? (
         <R.MoreInfo>
-          <Loading />
+          {matching ? <Alert helperName={helperInfo.name} /> : <Loading /> }
         </R.MoreInfo>
       ) : (
         <R.MiniModal>
@@ -131,7 +180,7 @@ const RequestHelp = () => {
                 value={inputNum}
                 onChange={e => loginInputHandler(e.target.value)}
               ></R.LoginInput>
-              <R.LoginButon onClick={submitLogin}>인증</R.LoginButon>
+              <R.LoginButton onClick={submitLogin}>인증</R.LoginButton>
             </R.GetPhoneWrapper>
           </R.LoginWrapper>
         </R.MiniModal>
