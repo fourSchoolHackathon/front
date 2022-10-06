@@ -157,13 +157,23 @@ const Main = () => {
     }
   }
 
+  const onLogout = () => {
+    localStorage.removeItem('access_token')
+    navigate('/')
+  }
+
   return (
     <M.Wrapper>
       <M.HeaderWrapper>
         <h2>할미</h2>
-        <div>
-          <Link to="/signin">로그인</Link> / <Link to="/signup">회원가입</Link>
-        </div>
+        {localStorage.getItem('access_token') ? (
+          <a onClick={onLogout}>로그아웃</a>
+        ) : (
+          <div>
+            <Link to="/signin">로그인</Link> /{' '}
+            <Link to="/signup">회원가입</Link>
+          </div>
+        )}
       </M.HeaderWrapper>
 
       <M.SimpleReqWrapper>

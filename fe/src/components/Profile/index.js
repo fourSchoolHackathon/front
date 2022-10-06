@@ -15,7 +15,11 @@ const Profile = () => {
   useEffect(() => {
     if (!localStorage.getItem('access_token')) navigate('/signin')
     ;(async () => {
-      const { data } = await api.get('/user/history')
+      const { data } = await api.get('/user/history', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      })
       setData(data)
     })()
   }, [])

@@ -20,6 +20,7 @@ export const HeaderWrapper = styled.div`
   a {
     color: #000;
     text-decoration: none;
+    cursor: pointer;
 
     :hover {
       text-decoration: underline;
