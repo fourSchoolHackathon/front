@@ -9,6 +9,7 @@ import {
   storedReqKind,
   storedCategoryInfo
 } from '../../stores/requestInfo/requestInfo'
+import { subscribe } from '../../utils/webPush'
 
 const Main = () => {
   //카테고리인지 아닌지
@@ -20,6 +21,12 @@ const Main = () => {
   const [isLogin, setIsLogin] = useRecoilState(storedIsLogin)
 
   const navigate = useNavigate()
+
+    useEffect(() => {
+        if (localStorage.getItem('access_token')) {
+            subscribe();
+        }
+    }, []);
 
   function getLocation() {
     if (navigator.geolocation) {
@@ -95,7 +102,7 @@ const Main = () => {
   const [selected, setSelected] = useState([])
 
   const [startTime, setStartTime] = useState(
-    `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
+    `${now.getFullYear()}-${`${now.getMonth()+1}`.padStart(
       2,
       '0'
     )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(
@@ -105,7 +112,7 @@ const Main = () => {
   )
 
   const [endTime, setEndTime] = useState(
-    `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
+    `${now.getFullYear()}-${`${now.getMonth()+1}`.padStart(
       2,
       '0'
     )}-${`${now.getDate()}`.padStart(2, '0')}T${`${
