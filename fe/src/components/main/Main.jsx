@@ -172,7 +172,7 @@ const Main = () => {
   return (
     <M.Wrapper>
       <M.HeaderWrapper>
-        <h2>어깨동무</h2>
+        <h3 style={{ fontSize: '1.5rem' }}>어깨동무</h3>
         {localStorage.getItem('access_token') ? (
           <a onClick={onLogout}>로그아웃</a>
         ) : (
