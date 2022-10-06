@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import api from '../../common/api'
 import { useEffect, useState } from 'react'
 import PostcodePopup from './PostcodePopup'
+import { Link, useNavigate } from 'react-router-dom'
 
 const categories = [
   '이동보조',
@@ -19,18 +20,20 @@ const categories = [
 
 const Signup = () => {
   // 위도경도가 저장
-  const [exactLocation,setExactLocation] = useState({lat:0,lng:0})
+  const [exactLocation, setExactLocation] = useState({ lat: 0, lng: 0 })
 
   const { kakao } = window
   const geocoder = new kakao.maps.services.Geocoder()
 
-  function searchAdd(string){
-    geocoder.addressSearch(string,(result,status) => {
-      if(status === kakao.maps.services.Status.OK){
+  function searchAdd(string) {
+    geocoder.addressSearch(string, (result, status) => {
+      if (status === kakao.maps.services.Status.OK) {
         // console.log(result)
         // temp = [result[0].y,result[0].x]
-        setExactLocation({lat:result[0].y,lng:result[0].x})
-           
+        setExactLocation({
+          latitude: (+result[0].y).toFixed(8),
+          longitude: (+result[0].x).toFixed(8)
+        })
       }
     })
   }
@@ -42,16 +45,20 @@ const Signup = () => {
     setError,
     formState: { errors }
   } = useForm()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [modal, setModal] = useState(false)
   const [address, setAddress] = useState('')
 
   useEffect(() => {
-    if (address.length > 0){
+    if (address.length > 0) {
       searchAdd(address)
     }
-  },[address])
+  }, [address])
 
+  useEffect(() => {
+    if (localStorage.getItem('access_token')) navigate('/')
+  }, [])
 
   const onSubmit = async form => {
     if (!address) {
@@ -66,18 +73,20 @@ const Signup = () => {
       return
     }
     if (loading) return
-    console.log(form)
 
     try {
       setLoading(true)
 
-      console.log(address)
-      console.log(exactLocation)
-
-      const { data } = await api.post('/user/signup', form)
+      const { data } = await api.post('/user/signup', {
+        ...form,
+        ...exactLocation,
+        address: undefined
+      })
       setLoading(false)
 
       localStorage.setItem('access_token', data.access_token)
+
+      navigate('/')
     } catch (e) {
       alert('회원가입에 실패했습니다')
       setLoading(false)
@@ -87,7 +96,7 @@ const Signup = () => {
   return (
     <S.Wrapper>
       <S.Content onSubmit={handleSubmit(onSubmit)}>
-        <Style.Title>회원가입</Style.Title>
+        <Style.Title>할미</Style.Title>
         <Style.LoginWrapper>
           <Style.InputWrapper>
             <Style.Label>실명</Style.Label>
@@ -217,7 +226,10 @@ const Signup = () => {
           />
         )}
 
-        <Style.LoginBtn>회원가입</Style.LoginBtn>
+        <S.ButtonWrapper>
+          <Style.LoginBtn>회원가입</Style.LoginBtn>
+          <Link to="/signin">로그인</Link>
+        </S.ButtonWrapper>
       </S.Content>
     </S.Wrapper>
   )
