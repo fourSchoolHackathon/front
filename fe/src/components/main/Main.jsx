@@ -45,7 +45,7 @@ const Main = () => {
   }
   function categoryRequest() {
     if (gender !== '' && selected !== []) {
-      console.log('카테고리 도움 요청',gender,selected,time)
+      console.log('카테고리 도움 요청', gender, selected, time)
       getLocation()
     } else {
       alert('카테고리를 완성해주세요')
@@ -61,22 +61,41 @@ const Main = () => {
   const now = new Date()
   const [gender, setGender] = useState('')
   const [selected, setSelected] = useState([])
-  const [time, setTime] = useState(
+
+  // const [time, setTime] = useState(
+  //   `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
+  //     2,
+  //     '0'
+  //   )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(
+  //     2,
+  //     '0'
+  //   )}:${`${now.getMinutes()}`.padStart(
+  //     2,
+  //     '0'
+  //   )}T${now.getFullYear()}-${`${now.getMonth()}`.padStart(
+  //     2,
+  //     '0'
+  //   )}-${`${now.getDate()}`.padStart(2, '0')}T${`${
+  //     now.getHours() + 2
+  //   }`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(2, '0')}`
+  // )
+
+  const [startTime, setStartTime] = useState(
     `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
       2,
       '0'
     )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(
       2,
       '0'
-    )}:${`${now.getMinutes()}`.padStart(
+    )}:${`${now.getMinutes()}`.padStart(2, '0')}
+  `
+  )
+
+  const [endTime, setEndTime] = useState(
+    `${`${now.getHours()}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(
       2,
       '0'
-    )}T${now.getFullYear()}-${`${now.getMonth()}`.padStart(
-      2,
-      '0'
-    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${
-      now.getHours() + 2
-    }`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(2, '0')}`
+    )}`
   )
 
   useEffect(() => {
@@ -181,7 +200,7 @@ const Main = () => {
                 <h4>시작일</h4>
                 <input
                   type="date"
-                  defaultValue={time.split('T')[0]}
+                  defaultValue={startTime.split('T')[0]}
                   onChange={e => timeHandler(0, e.target.value)}
                 />
               </M.SplitInput>
