@@ -1,6 +1,8 @@
 import * as S from './style'
 import * as Style from '../Signin/style'
 import { useForm } from 'react-hook-form'
+import api from '../../common/api'
+import { useState } from 'react'
 
 const categories = [
   '이동보조',
@@ -21,8 +23,20 @@ const Signup = () => {
     handleSubmit,
     formState: { errors }
   } = useForm()
+  const [loading, setLoading] = useState(false)
+
   const onSubmit = async form => {
-    console.log(form)
+    if (loading) return
+    try {
+      setLoading(true)
+      const { data } = await api.post('/user/signup', form)
+      setLoading(false)
+
+      localStorage.setItem('access_token', data.access_token)
+    } catch (e) {
+      alert('회원가입에 실패했습니다')
+      setLoading(false)
+    }
   }
 
   return (
@@ -125,7 +139,7 @@ const Signup = () => {
             </S.CheckBoxWrapper>
           </Style.InputWrapper>
         </Style.LoginWrapper>
-        <Style.LoginBtn>로그인</Style.LoginBtn>
+        <Style.LoginBtn>회원가입</Style.LoginBtn>
       </S.Content>
     </S.Wrapper>
   )
