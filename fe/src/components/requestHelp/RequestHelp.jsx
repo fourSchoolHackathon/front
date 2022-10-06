@@ -70,18 +70,9 @@ const RequestHelp = () => {
 
     // 로그인 되어 있을 때의 소켓 통신
     if (storageNum !== null){
-        connectSocket(userNumber)
+        connectSocket(storageNum)
     }
   },[])
-
-  ////   userNumber를 가져와서
-  //   useEffect(() => {
-  //     const userNum = localStorage.getItem('userNumber')
-  //     setUserNumber(userNum === null ? '' : userNum)
-  //     if (userNumber) {
-  //       connectSocket()
-  //     }
-  //   }, [])
 
 
   // ------ 로그인 안 됐을 때
@@ -94,11 +85,8 @@ const RequestHelp = () => {
   function submitLogin() {
     setIsLogin(true)
     localStorage.setItem('userNumber', inputNum)
+    connectSocket(inputNum)
   }
-
-//   useEffect(() => {
-
-//   },[userNumber])
 
   return (
     <R.Wrapper>
