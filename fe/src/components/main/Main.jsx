@@ -4,25 +4,28 @@ import * as M from './Main.style'
 import { useNavigate } from 'react-router-dom'
 
 import { useRecoilState } from 'recoil'
-import { storedLocation } from '../../stores/location/location'
+import { storedLocation,storedIsLogin } from '../../stores/location/location'
 
 const Main = () => {
   const [location, setLocation] = useRecoilState(storedLocation)
+  const [isLogin,setIsLogin]  = useRecoilState(storedIsLogin)
 
   const navigate = useNavigate()
 
   function getLocation() {
+    let returnLocation;
     if (navigator.geolocation) {
       // GPS를 지원하면
       navigator.geolocation.getCurrentPosition(
         function (position) {
           // console.log(position.coords.latitude + ' ' + position.coords.longitude);
           // 저장 후 리다이렉션
+          
           setLocation({
             lat: position.coords.latitude,
             lng: position.coords.longitude
           })
-          navigate('/req')
+          // navigate('/req')
         },
         function (error) {
           console.error(error)
@@ -33,55 +36,71 @@ const Main = () => {
           timeout: Infinity
         }
       )
+      // return returnLocation
     } else {
       alert('GPS를 지원하지 않습니다')
     }
   }
 
-  // 일단 웹 플로우 상으론 이게 맞음, 바로 requested로 들어오면 답없음
+  function getUserNumber(){
+    return localStorage.getItem('userNumber')
+  }
+
+  function toggleIsLogin(){
+    if (getUserNumber() === null){ // 연결이 이미 되어 있다면 getLocation
+      setIsLogin(false)
+    } else { // userNumber가 없다면
+      setIsLogin(true)
+    }
+  }
+
   function simpleReques() {
-    console.log('간단한 도움 요청')
+    
+    toggleIsLogin();
     getLocation()
+    console.log('간단한 도움 요청')
+    console.log('소켓 연결')
+    navigate('/req')
   }
   function categoryRequest() {
     if (gender !== '' && selected !== []) {
-      console.log('카테고리 도움 요청',gender,selected,time)
+      toggleIsLogin()
       getLocation()
+      console.log('카테고리 도움 요청', gender, selected, startTime,endTime)
+      console.log("소켓 연결")
+      navigate('/req')
     } else {
       alert('카테고리를 완성해주세요')
     }
   }
-
-  //   useEffect(() => {
-  //     console.log(location)
-  //   }, [location])
 
   // -------
 
   const now = new Date()
   const [gender, setGender] = useState('')
   const [selected, setSelected] = useState([])
-  const [time, setTime] = useState(
+
+  const [startTime, setStartTime] = useState(
     `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
       2,
       '0'
-    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(
+    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(
       2,
       '0'
-    )}:${`${now.getMinutes()}`.padStart(
-      2,
-      '0'
-    )}T${now.getFullYear()}-${`${now.getMonth()}`.padStart(
-      2,
-      '0'
-    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${
-      now.getHours() + 2
-    }`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(2, '0')}`
+    )}`
   )
 
-  useEffect(() => {
-    console.log(time)
-  }, [time])
+  const [endTime, setEndTime] = useState(
+    `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
+      2,
+      '0'
+    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()+2}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(
+      2,
+      '0'
+    )}`
+
+  )
+
 
   const service = [
     '이동보조',
@@ -109,14 +128,26 @@ const Main = () => {
       setSelected(prev => [...prev, service])
     }
   }
-  /** index는 T를 기준으로 나누었을 때의 배열index이다 */
-  function timeHandler(index, value) {
-    // setTime((prev) => prev.split("T")[index])
 
-    const temp = time.split('T')
-    temp[index] = value
-    setTime(temp.join(''))
+  /**
+   * @point start인지 end인지
+   * @index T로 나웠을 때 index
+   * @value 변경할 값
+   */
+  function timeHandler(point,index, value) {
+    let temp;
+    if (point === "start"){
+      temp = startTime.split('T')
+      temp[index] = value
+      setStartTime(temp.join(''))
+    } else {
+      temp = endTime.split('T')
+      temp[index] = value
+      setEndTime(temp.join(''))
+    }
+
   }
+
 
   return (
     <M.Wrapper>
@@ -181,16 +212,16 @@ const Main = () => {
                 <h4>시작일</h4>
                 <input
                   type="date"
-                  defaultValue={time.split('T')[0]}
-                  onChange={e => timeHandler(0, e.target.value)}
+                  defaultValue={startTime.split('T')[0]}
+                  onChange={e => timeHandler("start",0, e.target.value)}
                 />
               </M.SplitInput>
               <M.SplitInput>
                 <h4>종료일</h4>
                 <input
                   type="date"
-                  defaultValue={time.split('T')[0]}
-                  onChange={e => timeHandler(2, e.target.value)}
+                  defaultValue={endTime.split('T')[0]}
+                  onChange={e => timeHandler("end",0, e.target.value)}
                 />
               </M.SplitInput>
             </M.InputsWrapper>
@@ -199,16 +230,16 @@ const Main = () => {
                 <h4>시작 시간</h4>
                 <input
                   type="time"
-                  defaultValue={time.split('T')[1]}
-                  onChange={e => timeHandler(1, e.target.value)}
+                  defaultValue={startTime.split('T')[1]}
+                  onChange={e => timeHandler("start",1, e.target.value)}
                 />
               </M.SplitInput>
               <M.SplitInput>
                 <h4>종료 시간</h4>
                 <input
                   type="time"
-                  defaultValue={time.split('T')[3]}
-                  onChange={e => timeHandler(3, e.target.value)}
+                  defaultValue={endTime.split('T')[1]}
+                  onChange={e => timeHandler("end",1, e.target.value)}
                 />
               </M.SplitInput>
             </M.InputsWrapper>
