@@ -3,6 +3,7 @@ import * as Style from '../Signin/style'
 import { useForm } from 'react-hook-form'
 import api from '../../common/api'
 import { useState } from 'react'
+import PostcodePopup from './PostcodePopup'
 
 const categories = [
   '이동보조',
@@ -24,6 +25,8 @@ const Signup = () => {
     formState: { errors }
   } = useForm()
   const [loading, setLoading] = useState(false)
+  const [modal, setModal] = useState(false)
+  const [address, setAddress] = useState('')
 
   const onSubmit = async form => {
     if (loading) return
@@ -138,7 +141,25 @@ const Signup = () => {
               ))}
             </S.CheckBoxWrapper>
           </Style.InputWrapper>
+
+          <Style.InputWrapper>
+            <Style.Label>주소 검색</Style.Label>
+            <S.InputWrapper>
+              <S.FakeInput>{address}</S.FakeInput>
+              <S.Button onClick={() => setModal(true)} type="button">
+                주소검색
+              </S.Button>
+            </S.InputWrapper>
+          </Style.InputWrapper>
         </Style.LoginWrapper>
+
+        {modal && (
+          <PostcodePopup
+            onClose={() => setModal(false)}
+            setAddress={setAddress}
+          />
+        )}
+
         <Style.LoginBtn>회원가입</Style.LoginBtn>
       </S.Content>
     </S.Wrapper>
