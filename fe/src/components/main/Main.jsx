@@ -45,7 +45,7 @@ const Main = () => {
   }
   function categoryRequest() {
     if (gender !== '' && selected !== []) {
-      console.log('카테고리 도움 요청', gender, selected, time)
+      console.log('카테고리 도움 요청', gender, selected, startTime,endTime)
       getLocation()
     } else {
       alert('카테고리를 완성해주세요')
@@ -80,27 +80,38 @@ const Main = () => {
   //   }`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(2, '0')}`
   // )
 
+    // `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
+    //   2,
+    //   '0'
+    // )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(
+    //   2,
+    //   '0'
+    // )}:${`${now.getMinutes()}`.padStart(
+    //   2,
+    //   '0'
+    // )}
+
   const [startTime, setStartTime] = useState(
     `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
       2,
       '0'
-    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(
-      2,
-      '0'
-    )}:${`${now.getMinutes()}`.padStart(2, '0')}
-  `
-  )
-
-  const [endTime, setEndTime] = useState(
-    `${`${now.getHours()}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(
+    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(
       2,
       '0'
     )}`
   )
 
-  useEffect(() => {
-    console.log(time)
-  }, [time])
+  const [endTime, setEndTime] = useState(
+    `${now.getFullYear()}-${`${now.getMonth()}`.padStart(
+      2,
+      '0'
+    )}-${`${now.getDate()}`.padStart(2, '0')}T${`${now.getHours()+2}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(
+      2,
+      '0'
+    )}`
+
+  )
+
 
   const service = [
     '이동보조',
@@ -128,14 +139,26 @@ const Main = () => {
       setSelected(prev => [...prev, service])
     }
   }
-  /** index는 T를 기준으로 나누었을 때의 배열index이다 */
-  function timeHandler(index, value) {
-    // setTime((prev) => prev.split("T")[index])
 
-    const temp = time.split('T')
-    temp[index] = value
-    setTime(temp.join(''))
+  /**
+   * @point start인지 end인지
+   * @index T로 나웠을 때 index
+   * @value 변경할 값
+   */
+  function timeHandler(point,index, value) {
+    let temp;
+    if (point === "start"){
+      temp = startTime.split('T')
+      temp[index] = value
+      setStartTime(temp.join(''))
+    } else {
+      temp = endTime.split('T')
+      temp[index] = value
+      setEndTime(temp.join(''))
+    }
+
   }
+
 
   return (
     <M.Wrapper>
@@ -201,15 +224,15 @@ const Main = () => {
                 <input
                   type="date"
                   defaultValue={startTime.split('T')[0]}
-                  onChange={e => timeHandler(0, e.target.value)}
+                  onChange={e => timeHandler("start",0, e.target.value)}
                 />
               </M.SplitInput>
               <M.SplitInput>
                 <h4>종료일</h4>
                 <input
                   type="date"
-                  defaultValue={time.split('T')[0]}
-                  onChange={e => timeHandler(2, e.target.value)}
+                  defaultValue={endTime.split('T')[0]}
+                  onChange={e => timeHandler("end",0, e.target.value)}
                 />
               </M.SplitInput>
             </M.InputsWrapper>
@@ -218,16 +241,16 @@ const Main = () => {
                 <h4>시작 시간</h4>
                 <input
                   type="time"
-                  defaultValue={time.split('T')[1]}
-                  onChange={e => timeHandler(1, e.target.value)}
+                  defaultValue={startTime.split('T')[1]}
+                  onChange={e => timeHandler("start",1, e.target.value)}
                 />
               </M.SplitInput>
               <M.SplitInput>
                 <h4>종료 시간</h4>
                 <input
                   type="time"
-                  defaultValue={time.split('T')[3]}
-                  onChange={e => timeHandler(3, e.target.value)}
+                  defaultValue={endTime.split('T')[1]}
+                  onChange={e => timeHandler("end",1, e.target.value)}
                 />
               </M.SplitInput>
             </M.InputsWrapper>
