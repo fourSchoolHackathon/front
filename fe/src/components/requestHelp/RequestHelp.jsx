@@ -4,67 +4,159 @@ import { Circle, Map, MapMarker, ZoomControl } from 'react-kakao-maps-sdk'
 
 import { useRecoilState } from 'recoil'
 import { storedLocation, storedIsLogin } from '../../stores/location/location'
-
-import currentLoc from '../../static/requested/currentLoc.svg'
+import {
+  storedReqKind,
+  storedCategoryInfo
+} from '../../stores/requestInfo/requestInfo'
 
 import loading from '../../static/requested/loading.svg'
+import currentLoc from '../../static/requested/currentLoc.svg'
+// import helper from "../../static/requested/currentHelper.svg"
+import helper from '../../static/requested/helper.svg'
+
+import socketio from 'socket.io-client'
+
+import api from '../../common/api'
 
 const Loading = () => {
   return (
     <R.LoadingWrapper>
       <R.LoadBar>
         <h3>매칭중입니다</h3>
-        {/* <img src={loading} /> */}
         <img src={loading} alt="로딩중" />
       </R.LoadBar>
-      <p>곧 돌보미로부터 전화가 옴니다</p>
     </R.LoadingWrapper>
   )
 }
 
+const Alert = ({ helperName }) => {
+  return (
+    <R.AlertWrapper>
+      <h3>돌봄이가 매칭되었습니다</h3>
+      <p>곧 "{helperName}" 돌봄이로부터 전화가 옵니다</p>
+    </R.AlertWrapper>
+  )
+}
+
 const RequestHelp = () => {
+  // ---------
 
-    const [location, setLocation] = useRecoilState(storedLocation)
-    const [isLogin, setIsLogin] = useRecoilState(storedIsLogin)
+  // 소켓 연결
+  const socket = socketio('https://2022hackathon.bssm.kro.kr/match', {
+    transports: ['websocket']
+  })
 
-
+  const [location, setLocation] = useRecoilState(storedLocation)
+  const [isLogin, setIsLogin] = useRecoilState(storedIsLogin)
 
   // 로그인이 안 되 었을 때 사용할 state
-  const [userNumber, setUserNumber] = useState('')
-  const [certNumber, setCertNumber] = useState('')
+  const [inputNum, setInputNum] = useState('')
 
-  useEffect(() => {
-    const userNum = localStorage.getItem('userNumber')
-    if (userNum) {
-      setIsLogin(true)
-      setUserNumber(userNumber)
+  const [userNumber, setUserNumber] = useState('')
+  //   const [certNumber, setCertNumber] = useState('')
+
+  // 매칭되는지 아닌지
+  const [matching, setMatching] = useState(false)
+
+  // 도우미 정보
+  const [helperInfo, setHelperInfo] = useState({
+    name: '',
+    lat: '',
+    lng: ''
+  })
+
+  // -------------------
+
+  // 서버통신
+  const [reqKind, setReqKind] = useRecoilState(storedReqKind)
+  const [categoryInfo, setCategoryInfo] = useRecoilState(storedCategoryInfo)
+  const [loading, setLoading] = useState(false)
+
+
+  async function postServer(num) {
+    if (loading) return
+    setLoading(true)
+    if (reqKind === 'simple') {
+        console.log("간단한 요청")
+        //   console.log(num)
+        //   console.log(location)
+        const {data} = await api.post('/application/urgent',{
+            phone_number:num.split("-").join(''),
+            latitude:location.lat,
+            longitude:location.lng
+        })
+        console.log(data)
     } else {
+        // console.log(num)
+        // console.log(location)
+        // console.log(categoryInfo)
+        console.log("카테고리 요청")
+      const {data} = await api.post('/application',{
+        phone_number:num.split("-").join(''),
+        category_list:categoryInfo.category_list,
+        start_at:categoryInfo.start_at,
+        end_at:categoryInfo.end_at,
+        sex:categoryInfo.sex === "남자" ? "M" : "F",
+        latitude:location.lat,
+        longitude:location.lng
+      })
+      console.log(data)
     }
-    setUserNumber(userNum === null ? '' : userNum)
-  }, [])
+    setLoading(false)
+  }
+
+  // -------------------
 
   // 전화번호 커스텀
   useEffect(() => {
-    if (String(userNumber).length === 10) {
-      setUserNumber(userNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'))
+    if (String(inputNum).length === 10) {
+      setInputNum(inputNum.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'))
     }
-    if (String(userNumber).length === 13) {
-      setUserNumber(
-        userNumber
-          .replace(/-/g, '')
-          .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
+    if (String(inputNum).length === 13) {
+      setInputNum(
+        inputNum.replace(/-/g, '').replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
       )
     }
-  }, [userNumber])
+  }, [inputNum])
 
-  function loginInputHandler(value) {
-    setUserNumber(value)
+  // -------------
+
+  // 소켓 연결
+  function connectSocket(num) {
+    // console.log(num.split('-').join(''))
+    console.log('소켓 연결', num.split('-').join(''))
+    socket.emit('match', { phoneNumber: num.split('-').join('') })
+    socket.on('matchSuccess', msg => {
+      setMatching(true)
+      setHelperInfo({ name: msg.name, lat: msg.latitude, lng: msg.longitude })
+      //   {name: 'test', latitude: 30, longitude: 20}
+      console.log(msg)
+    })
   }
 
-  function makeLogin() {
+  useEffect(() => {
+    const storageNum = localStorage.getItem('userNumber')
+    setUserNumber(storageNum === null ? '' : storageNum)
+    setIsLogin(storageNum === null ? false : true)
+
+    if (storageNum !== null) {
+        postServer(storageNum)
+      connectSocket(storageNum)
+    }
+  }, [])
+
+  // ------ 로그인 안 됐을 때
+
+  function loginInputHandler(value) {
+    setInputNum(value)
+  }
+
+  // 인증 버튼을 눌렀을 때
+  function submitLogin() {
     setIsLogin(true)
-    setUserNumber(localStorage.setItem('userNumber', userNumber))
-    console.log('소켓 연결')
+    localStorage.setItem('userNumber', inputNum)
+    postServer(inputNum)
+    connectSocket(inputNum)
   }
 
   return (
@@ -90,6 +182,27 @@ const RequestHelp = () => {
             }
           }}
         />
+        {helperInfo.name && (
+          <MapMarker
+            position={{
+              lat: helperInfo.lat,
+              lng: helperInfo.lng
+            }}
+            image={{
+              src: helper,
+              size: {
+                width: 50,
+                height: 50
+              },
+              options: {
+                offset: {
+                  x: 25,
+                  y: 36
+                }
+              }
+            }}
+          />
+        )}
         <Circle
           center={location}
           radius={5000} // 미터 단위
@@ -103,7 +216,7 @@ const RequestHelp = () => {
       </Map>
       {isLogin ? (
         <R.MoreInfo>
-          <Loading />
+          {matching ? <Alert helperName={helperInfo.name} /> : <Loading />}
         </R.MoreInfo>
       ) : (
         <R.MiniModal>
@@ -112,20 +225,11 @@ const RequestHelp = () => {
               <R.LoginInput
                 placeholder="전화번호"
                 type="text"
-                value={userNumber}
+                value={inputNum}
                 onChange={e => loginInputHandler(e.target.value)}
               ></R.LoginInput>
-              <R.LoginButon onClick={makeLogin}>인증</R.LoginButon>
+              <R.LoginButton onClick={submitLogin}>인증</R.LoginButton>
             </R.GetPhoneWrapper>
-            {/* <R.GetPhoneWrapper>
-            <R.LoginInput
-              placeholder='인증번호'
-              type="text"
-              value={certNumber}
-              onChange={e => setCertNumber(e.target.value)}
-            ></R.LoginInput>
-            <R.LoginButon>인증</R.LoginButon>
-            </R.GetPhoneWrapper> */}
           </R.LoginWrapper>
         </R.MiniModal>
       )}

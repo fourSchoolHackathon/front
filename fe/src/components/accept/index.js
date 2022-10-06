@@ -9,7 +9,9 @@ const Main = () => {
   const phoneNumber = QueryString.parse(location.search, {
     ignoreQueryPrefix: true
   }).phoneNumber
+
   const [info, setInfo] = useState(null);
+
 
   useEffect(() => {
     (async () => {
